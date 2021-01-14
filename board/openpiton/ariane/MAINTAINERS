@@ -1,0 +1,6 @@
+SiFive FU540 BOARD
+M:	Tianrui Wei<tianrui-wei@outlook.com>
+S:	Maintained
+F:	board/openpiton/ariane/
+F:	include/configs/openpiton-ariane.h
+F:	configs/openpiton_ariane_defconfig
