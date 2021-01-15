@@ -27,5 +27,7 @@ config BOARD_SPECIFIC_OPTIONS # dummy
 	def_bool y
 	select OPENPITON_ARIANE
     imply SPL_RISCV_MMODE
+    imply SPL_RAM_SUPPORT
+    imply SPL_RAM_DEVICE
 
 endif
