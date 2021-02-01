@@ -6,8 +6,8 @@
  *   Pragnesh Patel <pragnesh.patel@sifve.com>
  */
 
-#ifndef _SPL_OPENPITON_H
-#define _SPL_OPENPITON_H
+#ifndef _SPL_ARIANE_H
+#define _SPL_ARIANE_H
 
 int spl_soc_init(void);
 
