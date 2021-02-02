@@ -707,6 +707,13 @@ config MMC_SUNXI_HAS_MODE_SWITCH
 	bool
 	depends on MMC_SUNXI
 
+config MMC_PITON
+	bool "MMC support for openpiton SoC"
+	depends on ARCH_RISCV
+	default y
+	help
+    This driver enables sd card support in uboot port for openpiton
+
 config GENERIC_ATMEL_MCI
 	bool "Atmel Multimedia Card Interface support"
 	depends on DM_MMC && BLK && ARCH_AT91
