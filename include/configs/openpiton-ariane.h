@@ -10,7 +10,7 @@
 #define __OPENPITON_ARIANE_CONFIG_H
 
 #include <linux/sizes.h>
-
+#define DEBUG
 //#define CONFIG_SPL
 
 #ifdef CONFIG_SPL

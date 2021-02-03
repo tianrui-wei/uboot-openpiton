@@ -9,6 +9,6 @@
 
 int spl_soc_init(void)
 {
-    debug("hello world from uboot spl\n");
+    printf("hello world from uboot spl\n");
 	return 0;
 }

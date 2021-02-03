@@ -8,13 +8,20 @@
     #address-cells = <2>;
     #size-cells = <2>;
     u-boot,dm-pre-reloc;    
-    compatible = "eth,ariane-bare-dev";
-    model = "eth,ariane-bare";
+    compatible = "openpiton,ariane";
+
+    chosen {
+       bootargs = "debug loglevel=9";
+       //stdout-path = "uart0:115200";
+    };
+
+    aliases {
+        console = &uart0;
+        serial = &uart0;
+    };
+
     // TODO: interrupt-based UART is currently very slow
     // with this configuration. this needs to be fixed.
-    // chosen {
-    //     stdout-path = "/soc/uart@fff0c2c000:115200";
-    // };
     cpus {
         #address-cells = <1>;
         #size-cells = <0>;
@@ -26,7 +33,7 @@
             device_type = "cpu";
             reg = <0>;
             status = "okay";
-            compatible = "eth, ariane", "riscv";
+            compatible = "openpiton,ariane", "riscv";
             riscv,isa = "rv64imafdc";
             mmu-type = "riscv,sv39";
             tlb-split;
@@ -47,13 +54,8 @@
         reg = < 0x00000000 0x80000000 0x00000000 0x40000000 >;
     };
             
-    soc {
-        #address-cells = <2>;
-        #size-cells = <2>;
-        compatible = "eth,ariane-bare-soc", "simple-bus";
-        ranges;
-        u-boot,dm-pre-reloc;    
-        uart@fff0c2c000 {
+        uart0:uart@fff0c2c000 {
+            device_type = "serial";
             compatible = "ns16550";
             reg = < 0x000000ff 0xf0c2c000 0x00000000 0x000d4000 >;
             clock-frequency = <66667000>;
@@ -63,10 +65,14 @@
             reg-shift = <0>; // regs are spaced on 8 bit boundary (modified from Xilinx UART16550 to be ns16550 compatible)
             u-boot,dm-pre-reloc;
         };
-            
+
+        mmc@0xf000000000 {
+            u-boot,dm-pre-reloc;
+            compatible = "ariane,piton-mmc";
+            reg = < 0x000000f0 0x00000000 0x00000000 0x00300000 >;
+        };
            
         debug-controller@fff1000000 {
-            u-boot,dm-pre-reloc;
             compatible = "riscv,debug-013";
             interrupts-extended = <&CPU0_intc 65535 >;
             reg = < 0x000000ff 0xf1000000 0x00000000 0x00001000 >;
@@ -82,7 +88,7 @@
         };
             
         PLIC0: plic@fff1100000 {
-            u-boot,dm-pre-reloc;
+//            u-boot,dm-pre-reloc;
             #address-cells = <0>;
             #interrupt-cells = <1>;
             compatible = "riscv,plic0";
@@ -93,6 +99,5 @@
             riscv,ndev = <2>;
         };
             
-    };
 };
-    
+   
