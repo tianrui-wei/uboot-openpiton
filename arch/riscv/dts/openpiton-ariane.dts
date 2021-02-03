@@ -18,6 +18,8 @@
     aliases {
         console = &uart0;
         serial = &uart0;
+        mmc0 = "/mmc@0xf000000000";
+        mmc1 = "/mmc@0xf000000000";
     };
 
     // TODO: interrupt-based UART is currently very slow

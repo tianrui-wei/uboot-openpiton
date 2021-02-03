@@ -7,57 +7,44 @@
  *   Tianrui Wei <tianrui-wei@outlook.com>
  */
 
+#include <asm/arch/spl.h>
 #include <init.h>
-#include <spl.h>
-#include <misc.h>
-#include <log.h>
 #include <linux/delay.h>
 #include <linux/io.h>
-#include <asm/arch/gpio.h>
-#include <asm/arch/spl.h>
+#include <log.h>
+//#include <misc.h>
+#include <spl.h>
+// includes to make lsp happy
+//#include "../../../arch/riscv/include/asm/arch-ariane/spl.h"
+//#include "../../../arch/riscv/include/asm/spl.h"
+//#include "../../../include/spl.h"
 
-#define GEM_PHY_RESET		SIFIVE_GENERIC_GPIO_NR(0, 12)
+int spl_board_init_f(void) {
+  int ret;
 
-#define MODE_SELECT_REG		0x1000
-#define MODE_SELECT_QSPI	0x6
-#define MODE_SELECT_SD		0xb
-#define MODE_SELECT_MASK	GENMASK(3, 0)
+  ret = spl_soc_init();
+  if (ret) {
+    debug("Openpiton Ariane SPL init failed: %d\n", ret);
+    return ret;
+  }
 
-int spl_board_init_f(void)
-{
-	int ret;
+  return 0;
+}
+void board_boot_order(u32 *spl_boot_list) {
+  u8 i;
+  u32 boot_devices[] = {
+      BOOT_DEVICE_MMC1,
+  };
 
-	ret = spl_soc_init();
-	if (ret) {
-		debug("Openpiton Ariane SPL init failed: %d\n", ret);
-		return ret;
-	}
-
-	return 0;
+  for (i = 0; i < ARRAY_SIZE(boot_devices); i++)
+    spl_boot_list[i] = boot_devices[i];
 }
 
-u32 spl_boot_device(void)
-{
-	u32 mode_select = readl((void *)MODE_SELECT_REG);
-	u32 boot_device = mode_select & MODE_SELECT_MASK;
-
-    //TODO: boot directly from sdcard exposed as rom
-	switch (boot_device) {
-	case MODE_SELECT_QSPI:
-		return BOOT_DEVICE_SPI;
-	case MODE_SELECT_SD:
-		return BOOT_DEVICE_MMC1;
-	default:
-		debug("Unsupported boot device 0x%x but trying MMC1\n",
-		      boot_device);
-		return BOOT_DEVICE_MMC1;
-	}
-}
+u32 spl_boot_device(void) { return BOOT_DEVICE_MMC1; }
 
 #ifdef CONFIG_SPL_LOAD_FIT
-int board_fit_config_name_match(const char *name)
-{
-	/* boot using first FIT config */
-	return 0;
+int board_fit_config_name_match(const char *name) {
+  /* boot using first FIT config */
+  return 0;
 }
 #endif

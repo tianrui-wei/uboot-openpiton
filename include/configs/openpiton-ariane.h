@@ -11,6 +11,7 @@
 
 #include <linux/sizes.h>
 #define DEBUG
+#define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "u-boot.bin"
 //#define CONFIG_SPL
 
 #ifdef CONFIG_SPL
