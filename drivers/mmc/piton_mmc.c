@@ -4,6 +4,7 @@
  * Minkyu Kang <mk7.kang@samsung.com>
  * Jaehoon Chung <jh80.chung@samsung.com>
  * Portions Copyright 2011-2019 NVIDIA Corporation
+ * Tianrui Wei <tianrui-wei@outlook.com>
  */
 
 #include <asm/gpio.h>
@@ -39,8 +40,6 @@ struct piton_mmc_priv {
 // also, initialize the block size at init
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
                               struct mmc_data *data) {
-  // is readind determines whether the current action is a read or not
-  uint8_t is_reading = data->flags & MMC_DATA_READ;
   // byte count counts all the bytes required for this command
   uint64_t byte_cnt = data->blocks * data->blocksize;
   // get which block in sd card to start from
@@ -53,33 +52,29 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   uint64_t start_addr = priv->piton_sd_base_addr + (start_block << 9);
 
 #ifdef DEBUG
-  debug("sd card debug: command index is %?", cmd->cmdidx);
-  debug("sd card debug: command argument is %?", cmd->cmdarg);
-  debug("sd card debug: command response type is %?", cmd->resp_type);
+  debug("sd card debug: command index is %d", cmd->cmdidx);
+  debug("sd card debug: command argument is %d", cmd->cmdarg);
+  debug("sd card debug: command response type is %d", cmd->resp_type);
 #endif
   // TODO: handle command response
 
   /* if data is not empty*/
   if (data) {
 #ifdef DEBUG
-    debug("sd card debug: data destination is %?", data->dest);
-    debug("sd card debug: data number of blocks is is %?", data->blocks);
-    debug("sd card debug: data blocksize is %?", data->blocksize);
-    debug("sd card debug: data flag is %?", data->flags);
+    debug("sd card debug: data destination is %p", data->dest);
+    debug("sd card debug: data number of blocks is is %d", data->blocks);
+    debug("sd card debug: data blocksize is %d", data->blocksize);
+    debug("sd card debug: data flag is %d", data->flags);
 #endif
     // FIXME: pin the sd card to 512 sector
 
     /* if there is a read */
     if (data->flags & MMC_DATA_READ) {
       for (uint64_t i = 0; i < byte_cnt; i += 8) {
-        *buff = readq(start_addr + i);
+        *buff = readq((void *)(start_addr + i));
       }
     } else {
-      debug("wrong command!\n");
-      debug("sd card debug: data destination is %?", data->dest);
-      debug("sd card debug: data number of blocks is is %?", data->blocks);
-      debug("sd card debug: data blocksize is %?", data->blocksize);
-      debug("sd card debug: data flag is %?", data->flags);
+      debug("wrong command! Only read is supported\n");
       /* else there is a write
        * we don't handle write, so error right away
        */
@@ -126,7 +121,6 @@ static const struct dm_mmc_ops piton_mmc_ops = {
 static int piton_mmc_probe(struct udevice *dev) {
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
   struct mmc_config *cfg = &plat->cfg;
-  int bus_width, ret;
 
   cfg->name = dev->name;
 
