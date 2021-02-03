@@ -8,7 +8,6 @@
 
 #include <asm/gpio.h>
 #include <asm/io.h>
-#include <asm/riscv/piton_mmc.h>
 #include <common.h>
 #include <dm.h>
 #include <errno.h>
