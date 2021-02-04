@@ -6,18 +6,24 @@
  *   Pragnesh Patel <pragnesh.patel@sifive.com>
  *   Tianrui Wei <tianrui-wei@outlook.com>
  */
-
+#include <hang.h>
+#include <common.h>
 #include <asm/arch/spl.h>
 #include <init.h>
 #include <linux/delay.h>
 #include <linux/io.h>
 #include <log.h>
+#include <configs/openpiton-ariane.h>
+#include <mmc.h>
+#include <dm.h>
 //#include <misc.h>
 #include <spl.h>
 // includes to make lsp happy
 //#include "../../../arch/riscv/include/asm/arch-ariane/spl.h"
 //#include "../../../arch/riscv/include/asm/spl.h"
 //#include "../../../include/spl.h"
+
+DECLARE_GLOBAL_DATA_PTR;
 
 int spl_board_init_f(void) {
   int ret;
@@ -30,18 +36,43 @@ int spl_board_init_f(void) {
 
   return 0;
 }
+
+void spl_board_init()
+{
+  struct mmc *mmc;
+  int ret;
+  ret = mmc_initialize(NULL);
+  if (ret)
+    hang();
+
+  mmc = find_mmc_device(BOOT_DEVICE_MMC1);
+  if (ret)
+    hang();
+
+  ret = mmc_init(mmc);
+  if (ret)
+    hang();
+}
+
+void board_init_f(ulong dummy)
+{
+  debug("entered custom board init r function");
+  //mem_malloc_init(CONFIG_SYS_SPL_MALLOC_START, CONFIG_SYS_SPL_MALLOC_SIZE);
+  //mmc_boot();
+}
+
 void board_boot_order(u32 *spl_boot_list) {
   u8 i;
   u32 boot_devices[] = {
-      BOOT_DEVICE_MMC1,
       BOOT_DEVICE_MMC2,
+      BOOT_DEVICE_MMC1,
   };
 
   for (i = 0; i < ARRAY_SIZE(boot_devices); i++)
     spl_boot_list[i] = boot_devices[i];
 }
 
-u32 spl_boot_device(void) { return BOOT_DEVICE_MMC1; }
+u32 spl_boot_device(void) { return BOOT_DEVICE_MMC2; }
 
 #ifdef CONFIG_SPL_LOAD_FIT
 int board_fit_config_name_match(const char *name) {

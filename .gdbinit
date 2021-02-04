@@ -17,7 +17,13 @@ set $pc = 0x80000000
 #b drivers/core/device.c:408
 #b drivers/core/device.c:459
 #b common/spl/spl_mmc.c:147
-b drivers/mmc/mmc-uclass.c:301
-b drivers/mmc/mmc-uclass.c:280
-continue
+#b drivers/mmc/mmc-uclass.c:301
+#b drivers/mmc/mmc-uclass.c:280
+#b mmc_init
+b mmc_initialize
+b blk_find_device
+#b mmc_probe
+b blk_find_device
+#b mmc_blk_probe
+#continue
 #restore spl/u-boot-spl.bin binary 0x80000000

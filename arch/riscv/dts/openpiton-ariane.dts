@@ -11,15 +11,16 @@
     compatible = "openpiton,ariane";
 
     chosen {
+       u-boot,dm-pre-reloc;    
        bootargs = "debug loglevel=9";
-       //stdout-path = "uart0:115200";
+       stdout-path = "uart0:115200";
     };
 
     aliases {
+        u-boot,dm-pre-reloc;
+        cpu0 = &CPU0;
         console = &uart0;
-        serial = &uart0;
-        mmc0 = "/mmc@0xf000000000";
-        mmc1 = "/mmc@0xf000000000";
+        serial0 = &uart0;
     };
 
     // TODO: interrupt-based UART is currently very slow
@@ -68,8 +69,9 @@
             u-boot,dm-pre-reloc;
         };
 
-        mmc@0xf000000000 {
+        sdhci_0: sdhci@0xf000000000 {
             u-boot,dm-pre-reloc;
+            status = "okay";
             compatible = "ariane,piton-mmc";
             reg = < 0x000000f0 0x00000000 0x00000000 0x00300000 >;
         };
@@ -83,6 +85,7 @@
             
         clint@fff1020000 {
             u-boot,dm-pre-reloc;
+            clock-frequency = <66667000>;
             compatible = "riscv,clint0";
             interrupts-extended = <&CPU0_intc 3 &CPU0_intc 7 >;
             reg = < 0x000000ff 0xf1020000 0x00000000 0x000c0000 >;
