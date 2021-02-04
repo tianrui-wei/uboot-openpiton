@@ -52,19 +52,19 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   uint64_t start_addr = priv->piton_sd_base_addr + (start_block << 9);
 
 #ifdef DEBUG
-  debug("sd card debug: command index is %d", cmd->cmdidx);
-  debug("sd card debug: command argument is %d", cmd->cmdarg);
-  debug("sd card debug: command response type is %d", cmd->resp_type);
+  printf("sd card debug: command index is %d", cmd->cmdidx);
+  printf("sd card debug: command argument is %d", cmd->cmdarg);
+  printf("sd card debug: command response type is %d", cmd->resp_type);
 #endif
   // TODO: handle command response
 
   /* if data is not empty*/
   if (data) {
 #ifdef DEBUG
-    debug("sd card debug: data destination is %p", data->dest);
-    debug("sd card debug: data number of blocks is is %d", data->blocks);
-    debug("sd card debug: data blocksize is %d", data->blocksize);
-    debug("sd card debug: data flag is %d", data->flags);
+    printf("sd card debug: data destination is %p", data->dest);
+    printf("sd card debug: data number of blocks is is %d", data->blocks);
+    printf("sd card debug: data blocksize is %d", data->blocksize);
+    printf("sd card debug: data flag is %d", data->flags);
 #endif
     // FIXME: pin the sd card to 512 sector
 
@@ -74,14 +74,14 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
         *buff = readq((void *)(start_addr + i));
       }
     } else {
-      debug("wrong command! Only read is supported\n");
+      printf("wrong command! Only read is supported\n");
       /* else there is a write
        * we don't handle write, so error right away
        */
       return -ENODEV;
     }
   } else {
-    debug("data is empty\n");
+    printf("data is empty\n");
   }
 
   return 0;
@@ -89,6 +89,19 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 
 static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 {
+  struct piton_mmc_priv *priv = dev_get_priv(dev);
+  struct piton_mmc_plat *plat = dev_get_platdata(dev);
+  struct mmc_config *cfg;
+
+  //FIXME: wrong base addrss
+  priv->piton_sd_base_addr = 0xffffffff;
+  cfg = &plat->cfg;
+  cfg->name = "PITON MMC";
+  cfg->host_caps = MMC_MODE_8BIT;
+  cfg->f_max = 100000;
+  cfg->f_min = 400000;
+  cfg->voltages = MMC_VDD_21_22;
+  printf("platform data initializing\n\n\n\n\n\n\n\n\n");
   return 0;
 }
 /*
@@ -100,7 +113,7 @@ static int piton_mmc_set_ios(struct udevice *dev) { return 0; }
  * always return 1, which means present
  */
 static int piton_mmc_getcd(struct udevice *dev) {
-  debug("piton_mmc_getcd called\n");
+  printf("piton_mmc_getcd called\n");
 
   return 1;
 }
@@ -108,13 +121,13 @@ static int piton_mmc_getcd(struct udevice *dev) {
 /* dummy function, piton_sd don't need initialization in hw*/
 static int piton_mmc_init(struct udevice *dev) {
 
-  debug("piton mmc init called\n");
-  debug("piton mmc init called\n");
-  debug("piton mmc init called\n");
-  debug("piton mmc init called\n");
-  debug("piton mmc init called\n");
-  debug("piton mmc init called\n");
-  debug("piton mmc init called\n");
+  printf("piton mmc init called\n");
+  printf("piton mmc init called\n");
+  printf("piton mmc init called\n");
+  printf("piton mmc init called\n");
+  printf("piton mmc init called\n");
+  printf("piton mmc init called\n");
+  printf("piton mmc init called\n");
   return 0;
 }
 
@@ -130,25 +143,35 @@ static const struct dm_mmc_ops piton_mmc_ops = {
 
 // TODO: bind block size here
 static int piton_mmc_probe(struct udevice *dev) {
+  struct mmc_uclass_priv *upriv = dev_get_uclass_priv(dev);
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
   struct piton_mmc_priv *priv = dev_get_uclass_priv(dev);
   struct mmc_config *cfg = &plat->cfg;
 
   cfg->name = dev->name;
-  debug("called piton mmc probe\n");
-  debug("called piton mmc probe\n");
-  debug("called piton mmc probe\n");
-  debug("called piton mmc probe\n");
-  debug("called piton mmc probe\n");
-  debug("called piton mmc probe\n");
+  upriv->mmc = &plat->mmc;
+  printf("called piton mmc probe\n");
+  printf("called piton mmc probe\n");
+  printf("called piton mmc probe\n");
+  printf("called piton mmc probe\n");
+  printf("called piton mmc probe\n");
+  printf("called piton mmc probe\n");
 
   return piton_mmc_init(dev);
 }
 
 static int piton_mmc_bind(struct udevice *dev) {
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
+  struct mmc_config *cfg = &plat->cfg;
 
-  return mmc_bind(dev, &plat->mmc, &plat->cfg);
+  cfg->name = dev->name;
+  cfg->host_caps = MMC_MODE_HS_52MHz | MMC_MODE_HS | MMC_MODE_8BIT;
+  cfg->voltages = MMC_VDD_165_195 | MMC_VDD_32_33 | MMC_VDD_33_34;
+  cfg->f_min = 1000000;
+  cfg->f_max = 52000000;
+  cfg->b_max = U32_MAX;
+
+  return mmc_bind(dev, &plat->mmc, cfg);
 }
 
 static const struct udevice_id piton_mmc_ids[] = {
