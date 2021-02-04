@@ -87,6 +87,10 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   return 0;
 }
 
+static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
+{
+  return 0;
+}
 /*
  * currently, this is ignored. we only use fixed speed
  */
@@ -104,6 +108,13 @@ static int piton_mmc_getcd(struct udevice *dev) {
 /* dummy function, piton_sd don't need initialization in hw*/
 static int piton_mmc_init(struct udevice *dev) {
 
+  debug("piton mmc init called\n");
+  debug("piton mmc init called\n");
+  debug("piton mmc init called\n");
+  debug("piton mmc init called\n");
+  debug("piton mmc init called\n");
+  debug("piton mmc init called\n");
+  debug("piton mmc init called\n");
   return 0;
 }
 
@@ -120,9 +131,16 @@ static const struct dm_mmc_ops piton_mmc_ops = {
 // TODO: bind block size here
 static int piton_mmc_probe(struct udevice *dev) {
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
+  struct piton_mmc_priv *priv = dev_get_uclass_priv(dev);
   struct mmc_config *cfg = &plat->cfg;
 
   cfg->name = dev->name;
+  debug("called piton mmc probe\n");
+  debug("called piton mmc probe\n");
+  debug("called piton mmc probe\n");
+  debug("called piton mmc probe\n");
+  debug("called piton mmc probe\n");
+  debug("called piton mmc probe\n");
 
   return piton_mmc_init(dev);
 }
@@ -140,6 +158,7 @@ U_BOOT_DRIVER(piton_mmc_drv) = {
     .name = "piton_mmc",
     .id = UCLASS_MMC,
     .of_match = piton_mmc_ids,
+    .ofdata_to_platdata = piton_mmc_ofdata_to_platdata,
     .bind = piton_mmc_bind,
     .probe = piton_mmc_probe,
     .ops = &piton_mmc_ops,

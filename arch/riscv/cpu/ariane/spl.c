@@ -6,9 +6,11 @@
 
 #include <dm.h>
 #include <log.h>
-
+#include <mmc.h>
 int spl_soc_init(void)
 {
     printf("hello world from uboot spl\n");
+
+    dm_dump_all();
 	return 0;
 }
