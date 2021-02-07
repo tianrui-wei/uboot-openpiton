@@ -13,6 +13,7 @@
 #include <dm.h>
 #include <errno.h>
 #include <linux/bitops.h>
+#include <linux/types.h>
 #include <linux/delay.h>
 #include <linux/err.h>
 #include <log.h>
@@ -40,6 +41,13 @@ struct piton_mmc_priv {
 // also, initialize the block size at init
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
                               struct mmc_data *data) {
+  // check first if this is a pure command
+  if (data == NULL) {
+    return 0;
+  }
+
+  if (cmd->cmdidx == 12)
+    return 0; 
   // byte count counts all the bytes required for this command
   uint64_t byte_cnt = data->blocks * data->blocksize;
   // get which block in sd card to start from
@@ -49,29 +57,32 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 
   struct piton_mmc_priv *priv = dev_get_priv(dev);
   // start address denotes the absolute address where the transmission start
-  uint64_t start_addr = priv->piton_sd_base_addr + (start_block << 9);
+  uint64_t start_addr = priv->piton_sd_base_addr + (start_block);
 
 #ifdef DEBUG
-  printf("sd card debug: command index is %d", cmd->cmdidx);
-  printf("sd card debug: command argument is %d", cmd->cmdarg);
-  printf("sd card debug: command response type is %d", cmd->resp_type);
+  printf("sd card debug: command index is %d\n", cmd->cmdidx);
+  printf("sd card debug: command argument is %d\n", cmd->cmdarg);
+  printf("sd card debug: command response type is %d\n", cmd->resp_type);
 #endif
   // TODO: handle command response
 
   /* if data is not empty*/
   if (data) {
 #ifdef DEBUG
-    printf("sd card debug: data destination is %p", data->dest);
-    printf("sd card debug: data number of blocks is is %d", data->blocks);
-    printf("sd card debug: data blocksize is %d", data->blocksize);
-    printf("sd card debug: data flag is %d", data->flags);
+    printf("sd card debug: data source is %lld\n", start_addr);
+    printf("sd card debug: data destination is %p\n", data->dest);
+    printf("sd card debug: data number of blocks is is %d\n", data->blocks);
+    printf("sd card debug: data blocksize is %d\n", data->blocksize);
+    printf("sd card debug: data flag is %d\n", data->flags);
 #endif
     // FIXME: pin the sd card to 512 sector
 
     /* if there is a read */
     if (data->flags & MMC_DATA_READ) {
-      for (uint64_t i = 0; i < byte_cnt; i += 8) {
-        *buff = readq((void *)(start_addr + i));
+      for (uint64_t i = 0; i < byte_cnt; i += 4) {
+        *(buff) = readl((void *)(start_addr + i));
+        printf("sd card debug: read data is 0x%08d\n", readl((void *)(start_addr + i)));
+        buff++;
       }
     } else {
       printf("wrong command! Only read is supported\n");
@@ -94,7 +105,7 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
   struct mmc_config *cfg;
 
   //FIXME: wrong base addrss
-  priv->piton_sd_base_addr = 0xffffffff;
+  priv->piton_sd_base_addr = 0xf000000000L;
   cfg = &plat->cfg;
   cfg->name = "PITON MMC";
   cfg->host_caps = MMC_MODE_8BIT;
@@ -150,6 +161,9 @@ static int piton_mmc_probe(struct udevice *dev) {
 
   cfg->name = dev->name;
   upriv->mmc = &plat->mmc;
+  upriv->mmc->has_init = 1;
+  upriv->mmc->capacity = 0x2000000000ULL;
+  upriv->mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
   printf("called piton mmc probe\n");
   printf("called piton mmc probe\n");
   printf("called piton mmc probe\n");
