@@ -59,7 +59,7 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   // start address denotes the absolute address where the transmission start
   uint64_t start_addr = priv->piton_sd_base_addr + (start_block);
 
-#ifdef DEBUG
+#ifdef DEBUGFF
   printf("sd card debug: command index is %d\n", cmd->cmdidx);
   printf("sd card debug: command argument is %d\n", cmd->cmdarg);
   printf("sd card debug: command response type is %d\n", cmd->resp_type);
@@ -68,7 +68,7 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 
   /* if data is not empty*/
   if (data) {
-#ifdef DEBUG
+#ifdef DEBUGFF
     printf("sd card debug: data source is %lld\n", start_addr);
     printf("sd card debug: data destination is %p\n", data->dest);
     printf("sd card debug: data number of blocks is is %d\n", data->blocks);
@@ -81,18 +81,18 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
     if (data->flags & MMC_DATA_READ) {
       for (uint64_t i = 0; i < byte_cnt; i += 4) {
         *(buff) = readl((void *)(start_addr + i));
-        printf("sd card debug: read data is 0x%08d\n", readl((void *)(start_addr + i)));
+        //printf("sd card debug: read data is 0x%08d\n", readl((void *)(start_addr + i)));
         buff++;
       }
     } else {
-      printf("wrong command! Only read is supported\n");
+      //printf("wrong command! Only read is supported\n");
       /* else there is a write
        * we don't handle write, so error right away
        */
       return -ENODEV;
     }
   } else {
-    printf("data is empty\n");
+    //printf("data is empty\n");
   }
 
   return 0;
