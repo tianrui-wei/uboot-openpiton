@@ -74,7 +74,7 @@ SECTIONS
 	_end = .;
 	_image_binary_end = .;
 
-	.bss : {
+	.bss __rel_dyn_start (OVERLAY) : {
 		__bss_start = .;
 		*(.bss*)
 		. = ALIGN(8);
