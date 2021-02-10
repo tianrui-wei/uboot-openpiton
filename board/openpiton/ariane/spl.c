@@ -49,11 +49,30 @@ void spl_board_init()
   //    hang();
 }
 
-/* void board_init_f(ulong dummy) { */
-/*   debug("entered custom board init r function"); */
-/*   // mem_malloc_init(CONFIG_SYS_SPL_MALLOC_START, CONFIG_SYS_SPL_MALLOC_SIZE); */
-/*   // mmc_boot(); */
-/* } */
+void board_init_f(ulong dummy) {
+  debug("entered custom board init r function");
+  int ret;
+
+  ret = spl_early_init();
+  if (ret)
+    panic("spl_early_init() failed: %d\n", ret);
+
+  arch_cpu_init_dm();
+
+  preloader_console_init();
+
+  ret = spl_board_init_f();
+  if (ret)
+    panic("spl_board_init_f() failed: %d\n", ret);
+  u64 current_pc;
+  asm volatile("auipc %0, 0x0":"=r"(current_pc):);
+  if (current_pc > 0x84000000ULL) {
+    debug("Relocation executing");
+    relocate_code(gd->start_addr_sp, gd->new_gd, 0x80000000);
+  } else {
+    debug("Not relocating");
+  }
+}
 
 void board_boot_order(u32 *spl_boot_list) {
   u8 i;
@@ -65,6 +84,7 @@ void board_boot_order(u32 *spl_boot_list) {
   for (i = 0; i < ARRAY_SIZE(boot_devices); i++)
     spl_boot_list[i] = boot_devices[i];
 }
+
 
 
 #ifdef CONFIG_SPL_LOAD_FIT
