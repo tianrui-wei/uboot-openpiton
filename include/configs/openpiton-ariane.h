@@ -15,16 +15,21 @@
 //#define CONFIG_SPL
 
 //#ifdef CONFIG_SPL
+// 0x80000000 relocated text base
+// 0x81000000 reserved
+// 0x85000000 original text base
+// 0x86000000 - 87: stack
+// 0x87000000 bss
 #define CONFIG_SYS_UBOOT_BASE 0x80000000
 #define CONFIG_STANDALONE_LOAD_ADDR	0x80200000
 
 #define CONFIG_SPL_MAX_SIZE     0x00100000
-#define CONFIG_SPL_BSS_START_ADDR   0x82000000
+#define CONFIG_SPL_BSS_START_ADDR   0x87000000
 #define CONFIG_SPL_BSS_MAX_SIZE     0x00100000
 #define CONFIG_SYS_SPL_MALLOC_START (CONFIG_SPL_BSS_START_ADDR + \
         CONFIG_SPL_BSS_MAX_SIZE)
 #define CONFIG_SYS_SPL_MALLOC_SIZE  0x0100000
-#define CONFIG_SPL_STACK    (0x80000000 + 0x04000000 - \
+#define CONFIG_SPL_STACK    (0x80000000 + 0x07000000 - \
         GENERATED_GBL_DATA_SIZE)
 
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "u-boot.bin"
@@ -58,5 +63,4 @@
  */
 
 #define CONFIG_TIMESTAMP	/* Print image info with timestamp */
-#define DEBUG
 #endif/* __CONFIG_H */

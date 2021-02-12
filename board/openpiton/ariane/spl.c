@@ -66,9 +66,10 @@ void board_init_f(ulong dummy) {
     panic("spl_board_init_f() failed: %d\n", ret);
   u64 current_pc;
   asm volatile("auipc %0, 0x0":"=r"(current_pc):);
+  //TODO: make this into a macro
   if (current_pc > 0x84000000ULL) {
     debug("Relocation executing");
-    relocate_code(gd->start_addr_sp, gd->new_gd, 0x80000000);
+    spl_reloc(0x86000000ULL, 0x80000000ULL, (0x10000ULL));
   } else {
     debug("Not relocating");
   }
