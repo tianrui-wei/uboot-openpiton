@@ -18,6 +18,7 @@
 #include <dm.h>
 //#include <misc.h>
 #include <spl.h>
+#include <config.h>
 // includes to make lsp happy
 //#include "../../../arch/riscv/include/asm/arch-ariane/spl.h"
 //#include "../../../arch/riscv/include/asm/spl.h"
@@ -66,10 +67,12 @@ void board_init_f(ulong dummy) {
     panic("spl_board_init_f() failed: %d\n", ret);
   u64 current_pc;
   asm volatile("auipc %0, 0x0":"=r"(current_pc):);
+  debug("current pc is %llx\n", current_pc);
   //TODO: make this into a macro
   if (current_pc < 0x84000000ULL) {
     debug("Relocation executing");
-    spl_reloc(0x80000000ULL, 0x85000000ULL, (0x10000ULL));
+    //    spl_reloc(0x80000000ULL, 0x85000000ULL, (0x10000ULL));
+    relocate_code(0x87000000ULL, (gd_t *)CONFIG_SPL_GD_ADDR, 0x85000000ULL);
   } else {
     debug("Not relocating");
   }
