@@ -20,6 +20,7 @@
 // 0x85000000 original text base
 // 0x86000000 - 87: stack
 // 0x87000000 bss
+// 0x88000000 gd address
 #define CONFIG_SYS_UBOOT_BASE 0x80000000
 #define CONFIG_STANDALONE_LOAD_ADDR	0x80200000
 
@@ -33,7 +34,7 @@
         GENERATED_GBL_DATA_SIZE)
 
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "u-boot.bin"
-#define CONFIG_SPL_GD_ADDR 0x85000000
+#define CONFIG_SPL_GD_ADDR 0x88000000
 //#endif
 
 #define SYS_TEXT_BASE 0x80000000
