@@ -1,6 +1,14 @@
   .text
   .globl spl_reloc
+  .type spl_reloc, @function
 spl_reloc:
+  // clear some global variables to avoid deadlock
+  la t0, hart_lottery
+  li t1, 0
+  sw t1, 0(t0)
+  la t0, available_harts_lock
+  li t1, 1
+  sw t1, 0(t0)
   // first argument is the current text base
   // second argument is the target text base
   // third argument is the length of the copy
@@ -9,7 +17,7 @@ spl_reloc:
   // t1 hold temporary data
   mv s0, a1
   li t0, 0
-memcpy: 
+memcpy:
   bge t0, a2, jmp_to_reloc
   ld t1, 0(a0)
   sd t1, 0(a1)

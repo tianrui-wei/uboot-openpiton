@@ -67,9 +67,9 @@ void board_init_f(ulong dummy) {
   u64 current_pc;
   asm volatile("auipc %0, 0x0":"=r"(current_pc):);
   //TODO: make this into a macro
-  if (current_pc > 0x84000000ULL) {
+  if (current_pc < 0x84000000ULL) {
     debug("Relocation executing");
-    spl_reloc(0x86000000ULL, 0x80000000ULL, (0x10000ULL));
+    spl_reloc(0x80000000ULL, 0x85000000ULL, (0x10000ULL));
   } else {
     debug("Not relocating");
   }

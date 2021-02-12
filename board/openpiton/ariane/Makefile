@@ -4,4 +4,5 @@
 obj-y += ariane.o
 ifdef CONFIG_SPL_BUILD
 obj-y += spl.o
+obj-y += relocate.o
 endif
