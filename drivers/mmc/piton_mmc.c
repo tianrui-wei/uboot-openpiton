@@ -112,7 +112,6 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
   cfg->f_max = 100000;
   cfg->f_min = 400000;
   cfg->voltages = MMC_VDD_21_22;
-  printf("platform data initializing\n\n\n\n\n\n\n\n\n");
   return 0;
 }
 /*
@@ -124,7 +123,6 @@ static int piton_mmc_set_ios(struct udevice *dev) { return 0; }
  * always return 1, which means present
  */
 static int piton_mmc_getcd(struct udevice *dev) {
-  printf("piton_mmc_getcd called\n");
 
   return 1;
 }
@@ -132,13 +130,6 @@ static int piton_mmc_getcd(struct udevice *dev) {
 /* dummy function, piton_sd don't need initialization in hw*/
 static int piton_mmc_init(struct udevice *dev) {
 
-  printf("piton mmc init called\n");
-  printf("piton mmc init called\n");
-  printf("piton mmc init called\n");
-  printf("piton mmc init called\n");
-  printf("piton mmc init called\n");
-  printf("piton mmc init called\n");
-  printf("piton mmc init called\n");
   return 0;
 }
 
@@ -164,12 +155,6 @@ static int piton_mmc_probe(struct udevice *dev) {
   upriv->mmc->has_init = 1;
   upriv->mmc->capacity = 0x2000000000ULL;
   upriv->mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
-  printf("called piton mmc probe\n");
-  printf("called piton mmc probe\n");
-  printf("called piton mmc probe\n");
-  printf("called piton mmc probe\n");
-  printf("called piton mmc probe\n");
-  printf("called piton mmc probe\n");
 
   return piton_mmc_init(dev);
 }

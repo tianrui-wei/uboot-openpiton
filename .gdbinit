@@ -4,7 +4,7 @@ file spl/u-boot-spl
 #file u-boot
 load
 layout split
-set $pc = 0x80000000
+set $pc = 0x83000000
 #b spl_init
 #b ofnode_read_prop
 #b spl_boot_device
@@ -22,8 +22,6 @@ set $pc = 0x80000000
 #b mmc_init
 #b mmc_probe
 #b mmc_blk_probe
-b spl_invoke_opensbi
-b common/spl/spl.c:705
-b board_init_r
+b jump_to_image_no_args
 #continue
 #restore spl/u-boot-spl.bin binary 0x80000000

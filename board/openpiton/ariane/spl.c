@@ -58,7 +58,6 @@ void spl_board_init()
 void board_boot_order(u32 *spl_boot_list) {
   u8 i;
   u32 boot_devices[] = {
-    BOOT_DEVICE_MMC2_2,
     BOOT_DEVICE_MMC1,
   };
 
