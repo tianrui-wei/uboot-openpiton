@@ -37,7 +37,7 @@ __weak void board_init_f(ulong dummy)
 
 void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 {
-	typedef void __noreturn (*image_entry_riscv_t)(ulong hart, void *dtb, ulong load_addr);
+	typedef void __noreturn (*image_entry_riscv_t)(ulong hart, void *dtb);
 	void *fdt_blob;
 	__maybe_unused int ret;
 
@@ -57,5 +57,5 @@ void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
 	if (ret)
 		hang();
 #endif
-	image_entry(gd->arch.boot_hart, fdt_blob, CONFIG_SYS_TEXT_BASE);
+	image_entry(gd->arch.boot_hart, fdt_blob);
 }
