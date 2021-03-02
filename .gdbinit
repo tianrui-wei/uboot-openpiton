@@ -22,6 +22,5 @@ set $pc = 0x83000000
 #b mmc_init
 #b mmc_probe
 #b mmc_blk_probe
-b jump_to_image_no_args
 #continue
 #restore spl/u-boot-spl.bin binary 0x80000000

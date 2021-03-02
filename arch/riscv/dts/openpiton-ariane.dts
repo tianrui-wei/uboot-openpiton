@@ -59,7 +59,7 @@
             
         uart0:uart@fff0c2c000 {
             device_type = "serial";
-            compatible = "ns16550";
+            compatible = "ns16550a";
             reg = < 0x000000ff 0xf0c2c000 0x00000000 0x000d4000 >;
             clock-frequency = <66667000>;
             current-speed = <115200>;
