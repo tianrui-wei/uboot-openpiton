@@ -27,7 +27,7 @@
 #define CONFIG_SPL_STACK    (0x80000000 + 0x04000000 - \
         GENERATED_GBL_DATA_SIZE)
 
-#define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "fw_payload_uboot.bin"
+#define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "fw_payload.bin"
 #define CONFIG_SPL_GD_ADDR 0x85000000
 //#endif
 
@@ -52,8 +52,10 @@
 
 #define CONFIG_USE_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND \
-    "fatload mmc 0:1 0x80200000 Image; " \
-    "booti 0x80200000 - 0xbffee530; "
+    "fdt addr ${fdtcontroladdr}; " \
+    "fdt move ${fdtcontroladdr} 0x86000000; " \
+    "ext4load mmc 0:1 0x80200000 Image; " \
+    "booti 0x80200000 - 0x86000000; "
 
 /* ---------------------------------------------------------------------
  * Board boot configuration
