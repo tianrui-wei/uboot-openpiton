@@ -7,7 +7,6 @@
  */
 
 #define LOG_CATEGORY LOGC_DM
-#define LOG_DEBUG
 
 #include <common.h>
 #include <errno.h>

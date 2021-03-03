@@ -2912,32 +2912,8 @@ int mmc_init(struct mmc *mmc)
 #if CONFIG_IS_ENABLED(DM_MMC)
 	struct mmc_uclass_priv *upriv = dev_get_uclass_priv(mmc->dev);
 
-	mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
-	mmc->capacity_user = 0x100000000;
-	mmc->capacity_user *= mmc->read_bl_len;
-	mmc->capacity_boot = 0;
-	mmc->capacity_rpmb = 0;
-	for (int i = 0; i < 4; i++)
-		mmc->capacity_gp[i] = 0;
-	mmc->capacity = 0x2000000000ULL;
-
-	/* fill in device description */
-	struct blk_desc *bdesc;
-
-	bdesc = mmc_get_blk_desc(mmc);
-	bdesc->lun = 0;
-	bdesc->hwpart = 0;
-	bdesc->type = 0;
-	bdesc->blksz = mmc->read_bl_len;
-	bdesc->log2blksz = LOG2(bdesc->blksz);
-	bdesc->lba = lldiv(mmc->capacity, mmc->read_bl_len);
-
 	upriv->mmc = mmc;
 #endif
-
-
-
-
 	if (mmc->has_init)
 		return 0;
 

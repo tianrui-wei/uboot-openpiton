@@ -17,6 +17,7 @@
 #include <linux/delay.h>
 #include <linux/err.h>
 #include <log.h>
+#include <div64.h>
 #include <mmc.h>
 // FIXME: fix the includes. Includes below are for the benefits of clangd, which
 // doesn't really work...
@@ -103,6 +104,7 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
   struct piton_mmc_priv *priv = dev_get_priv(dev);
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
   struct mmc_config *cfg;
+  struct mmc *mmc;
 
   //FIXME: wrong base addrss
   priv->piton_sd_base_addr = 0xf000000000L;
@@ -112,6 +114,29 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
   cfg->f_max = 100000;
   cfg->f_min = 400000;
   cfg->voltages = MMC_VDD_21_22;
+
+  mmc = &plat->mmc;
+  mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
+  mmc->capacity_user = 0x100000000;
+  mmc->capacity_user *= mmc->read_bl_len;
+  mmc->capacity_boot = 0;
+  mmc->capacity_rpmb = 0;
+  for (int i = 0; i < 4; i++)
+    mmc->capacity_gp[i] = 0;
+  mmc->capacity = 0x2000000000ULL;
+  mmc->has_init = 1;
+
+  /* fill in device description */
+  struct blk_desc *bdesc;
+
+  bdesc = mmc_get_blk_desc(mmc);
+  bdesc->lun = 0;
+  bdesc->hwpart = 0;
+  bdesc->type = 0;
+  bdesc->blksz = mmc->read_bl_len;
+  bdesc->log2blksz = LOG2(bdesc->blksz);
+  bdesc->lba = lldiv(mmc->capacity, mmc->read_bl_len);
+
   return 0;
 }
 /*
