@@ -48,7 +48,14 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   }
 
   if (cmd->cmdidx == 12)
-    return 0; 
+    return 0;
+  if (cmd->cmdidx == MMC_CMD_SEND_CSD) {
+    cmd->response[0] = 0;
+    cmd->response[1] = 0x0f00;
+    cmd->response[2] = 0x3ff;
+    cmd->response[3] = 0x38000;
+    return 0;
+  }
   // byte count counts all the bytes required for this command
   uint64_t byte_cnt = data->blocks * data->blocksize;
   // get which block in sd card to start from

@@ -2505,6 +2505,7 @@ static int mmc_startup(struct mmc *mmc)
 	mmc_select_mode(mmc, MMC_LEGACY);
 
 	mmc->dsr_imp = ((cmd.response[1] >> 12) & 0x1);
+	mmc->read_bl_len = 1 << ((cmd.response[1] >> 16) & 0xf);
 #if CONFIG_IS_ENABLED(MMC_WRITE)
 
 	if (IS_SD(mmc))
@@ -2513,25 +2514,25 @@ static int mmc_startup(struct mmc *mmc)
 		mmc->write_bl_len = 1 << ((cmd.response[3] >> 22) & 0xf);
 #endif
 
-	// if (mmc->high_capacity) {
-	// 	csize = (mmc->csd[1] & 0x3f) << 16
-	// 		| (mmc->csd[2] & 0xffff0000) >> 16;
-	// 	cmult = 8;
-	// } else {
-	// 	csize = (mmc->csd[1] & 0x3ff) << 2
-	// 		| (mmc->csd[2] & 0xc0000000) >> 30;
-	// 	cmult = (mmc->csd[2] & 0x00038000) >> 15;
-	// }
+	if (mmc->high_capacity) {
+		csize = (mmc->csd[1] & 0x3f) << 16
+			| (mmc->csd[2] & 0xffff0000) >> 16;
+		cmult = 8;
+	} else {
+		csize = (mmc->csd[1] & 0x3ff) << 2
+			| (mmc->csd[2] & 0xc0000000) >> 30;
+		cmult = (mmc->csd[2] & 0x00038000) >> 15;
+	}
 
-	mmc->capacity_user = 0x100000000;
+	mmc->capacity_user = (csize + 1) << (cmult + 2);
 	mmc->capacity_user *= mmc->read_bl_len;
 	mmc->capacity_boot = 0;
 	mmc->capacity_rpmb = 0;
 	for (i = 0; i < 4; i++)
 		mmc->capacity_gp[i] = 0;
 
-	// if (mmc->read_bl_len > MMC_MAX_BLOCK_LEN)
-	mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
+	if (mmc->read_bl_len > MMC_MAX_BLOCK_LEN)
+		mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
 
 #if CONFIG_IS_ENABLED(MMC_WRITE)
 	if (mmc->write_bl_len > MMC_MAX_BLOCK_LEN)
