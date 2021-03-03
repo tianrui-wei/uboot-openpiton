@@ -19,14 +19,6 @@
 #include <log.h>
 #include <div64.h>
 #include <mmc.h>
-// FIXME: fix the includes. Includes below are for the benefits of clangd, which
-// doesn't really work...
-//#include <stdint.h>
-//#include "../../arch/riscv/include/asm/io.h"
-//#include "../../include/dm/device.h"
-//#include "../../include/linux/bitops.h"
-//#include "../../include/log.h"
-//#include "../../include/mmc.h"
 
 struct piton_mmc_plat {
   struct mmc_config cfg;
@@ -34,7 +26,7 @@ struct piton_mmc_plat {
 };
 
 struct piton_mmc_priv {
-  uint64_t piton_sd_base_addr; /* peripheral id */
+  uint64_t piton_sd_base_addr; /* piton base address */
 };
 
 // see mmc_read_blocks to see how it is used.
@@ -47,16 +39,6 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
     return 0;
   }
 
-  //FIXME: clean up this code if it's indeed not required
-  //  if (cmd->cmdidx == 12)
-  //    return 0;
-  //  if (cmd->cmdidx == MMC_CMD_SEND_CSD) {
-  //    cmd->response[0] = 0;
-  //    cmd->response[1] = 0x0f00;
-  //    cmd->response[2] = 0x3ff;
-  //    cmd->response[3] = 0x38000;
-  //    return 0;
-  //  }
   // byte count counts all the bytes required for this command
   uint64_t byte_cnt = data->blocks * data->blocksize;
   // get which block in sd card to start from
@@ -68,54 +50,31 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   // start address denotes the absolute address where the transmission start
   uint64_t start_addr = priv->piton_sd_base_addr + (start_block);
 
-#ifdef DEBUGFF
-  printf("sd card debug: command index is %d\n", cmd->cmdidx);
-  printf("sd card debug: command argument is %d\n", cmd->cmdarg);
-  printf("sd card debug: command response type is %d\n", cmd->resp_type);
-#endif
-  // TODO: handle command response
-
   /* if data is not empty*/
   if (data) {
-#ifdef DEBUGFF
-    printf("sd card debug: data source is %lld\n", start_addr);
-    printf("sd card debug: data destination is %p\n", data->dest);
-    printf("sd card debug: data number of blocks is is %d\n", data->blocks);
-    printf("sd card debug: data blocksize is %d\n", data->blocksize);
-    printf("sd card debug: data flag is %d\n", data->flags);
-#endif
-    // FIXME: pin the sd card to 512 sector
 
     /* if there is a read */
     if (data->flags & MMC_DATA_READ) {
       for (uint64_t i = 0; i < byte_cnt; i += 4) {
         *(buff) = readl((void *)(start_addr + i));
-        //printf("sd card debug: read data is 0x%08d\n", readl((void *)(start_addr + i)));
         buff++;
       }
     } else {
-      //printf("wrong command! Only read is supported\n");
       /* else there is a write
        * we don't handle write, so error right away
        */
       return -ENODEV;
     }
-  } else {
-    //printf("data is empty\n");
   }
-
   return 0;
 }
 
 static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 {
-  struct piton_mmc_priv *priv = dev_get_priv(dev);
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
   struct mmc_config *cfg;
   struct mmc *mmc;
 
-  //FIXME: wrong base addrss
-  priv->piton_sd_base_addr = 0xf000000000L;
   cfg = &plat->cfg;
   cfg->name = "PITON MMC";
   cfg->host_caps = MMC_MODE_8BIT;
@@ -125,7 +84,7 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 
   mmc = &plat->mmc;
   mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
-  mmc->capacity_user = 0x100000000;
+  mmc->capacity_user = 0x100000000ULL;
   mmc->capacity_user *= mmc->read_bl_len;
   mmc->capacity_boot = 0;
   mmc->capacity_rpmb = 0;
@@ -156,13 +115,11 @@ static int piton_mmc_set_ios(struct udevice *dev) { return 0; }
  * always return 1, which means present
  */
 static int piton_mmc_getcd(struct udevice *dev) {
-
   return 1;
 }
 
 /* dummy function, piton_sd don't need initialization in hw*/
 static int piton_mmc_init(struct udevice *dev) {
-
   return 0;
 }
 
@@ -176,12 +133,13 @@ static const struct dm_mmc_ops piton_mmc_ops = {
     .get_cd = piton_mmc_getcd,
 };
 
-// TODO: bind block size here
 static int piton_mmc_probe(struct udevice *dev) {
   struct mmc_uclass_priv *upriv = dev_get_uclass_priv(dev);
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
   struct piton_mmc_priv *priv = dev_get_uclass_priv(dev);
   struct mmc_config *cfg = &plat->cfg;
+
+  priv->piton_sd_base_addr = dev_read_addr(dev);
 
   cfg->name = dev->name;
   upriv->mmc = &plat->mmc;
