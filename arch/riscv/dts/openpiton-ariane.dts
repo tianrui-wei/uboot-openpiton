@@ -18,7 +18,6 @@
 
     aliases {
         u-boot,dm-pre-reloc;
-        cpu0 = &CPU0;
         console = &uart0;
         serial0 = &uart0;
     };
