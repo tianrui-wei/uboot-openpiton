@@ -8,7 +8,6 @@ config OPENPITON_ARIANE
 	select SUPPORT_SPL
 	select RAM
 	select SPL_RAM if SPL
-	imply CPU
 	imply CPU_RISCV
 	imply RISCV_TIMER if (RISCV_SMODE || SPL_RISCV_SMODE)
 	imply SIFIVE_CLINT if (RISCV_MMODE || SPL_RISCV_MMODE)
