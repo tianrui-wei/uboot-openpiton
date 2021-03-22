@@ -7,27 +7,25 @@ config SYS_VENDOR
 	default "openpiton"
 
 config SYS_CPU
-	default "ariane"
+	default "generic"
 
 config SYS_CONFIG_NAME
 	default "openpiton-ariane"
 
 config SYS_TEXT_BASE
-	default 0x80200000 if SPL
+	default 0x81200000 if SPL
 	default 0x80000000 if !RISCV_SMODE
-	default 0x80200000 if RISCV_SMODE
+	default 0x81200000 if RISCV_SMODE
 
 config SPL_TEXT_BASE
-	default 0xfff1010000
+	default 0x80000000
 
 config SPL_OPENSBI_LOAD_ADDR
-	default 0x80000000
+	default 0x81000000
 
 config BOARD_SPECIFIC_OPTIONS # dummy
 	def_bool y
 	select OPENPITON_ARIANE
     imply SPL_RISCV_MMODE
-    imply SPL_RAM_SUPPORT
-    imply SPL_RAM_DEVICE
 
 endif
