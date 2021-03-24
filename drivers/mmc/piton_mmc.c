@@ -170,7 +170,7 @@ static int piton_mmc_bind(struct udevice *dev) {
 }
 
 static const struct udevice_id piton_mmc_ids[] = {
-    {.compatible = "ariane,piton-mmc"}, {}};
+    {.compatible = "openpiton,piton-mmc"}, {}};
 
 U_BOOT_DRIVER(piton_mmc_drv) = {
     .name = "piton_mmc",

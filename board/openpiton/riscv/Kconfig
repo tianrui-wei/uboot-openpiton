@@ -1,4 +1,4 @@
-if TARGET_OPENPITON_ARIANE
+if TARGET_OPENPITON_RISCV
 
 config SYS_BOARD
 	default "riscv"

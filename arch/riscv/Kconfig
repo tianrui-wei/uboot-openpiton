@@ -23,8 +23,8 @@ config TARGET_SIFIVE_FU540
 config TARGET_SIPEED_MAIX
 	bool "Support Sipeed Maix Board"
 
-config TARGET_OPENPITON_ARIANE
-    bool "Support Ariane on openpiton on genesys 2"
+config TARGET_OPENPITON_RISCV
+    bool "Support riscv cores on openpiton SoC"
 
 endchoice
 
