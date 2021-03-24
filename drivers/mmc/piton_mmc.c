@@ -4,6 +4,7 @@
  * Minkyu Kang <mk7.kang@samsung.com>
  * Jaehoon Chung <jh80.chung@samsung.com>
  * Portions Copyright 2011-2019 NVIDIA Corporation
+ * Portions Copyright 2021 Tianrui Wei
  * Tianrui Wei <tianrui-wei@outlook.com>
  */
 
@@ -19,14 +20,6 @@
 #include <log.h>
 #include <div64.h>
 #include <mmc.h>
-// FIXME: fix the includes. Includes below are for the benefits of clangd, which
-// doesn't really work...
-//#include <stdint.h>
-//#include "../../arch/riscv/include/asm/io.h"
-//#include "../../include/dm/device.h"
-//#include "../../include/linux/bitops.h"
-//#include "../../include/log.h"
-//#include "../../include/mmc.h"
 
 struct piton_mmc_plat {
   struct mmc_config cfg;
@@ -47,16 +40,6 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
     return 0;
   }
 
-  //FIXME: clean up this code if it's indeed not required
-  //  if (cmd->cmdidx == 12)
-  //    return 0;
-  //  if (cmd->cmdidx == MMC_CMD_SEND_CSD) {
-  //    cmd->response[0] = 0;
-  //    cmd->response[1] = 0x0f00;
-  //    cmd->response[2] = 0x3ff;
-  //    cmd->response[3] = 0x38000;
-  //    return 0;
-  //  }
   // byte count counts all the bytes required for this command
   uint64_t byte_cnt = data->blocks * data->blocksize;
   // get which block in sd card to start from
@@ -68,23 +51,8 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
   // start address denotes the absolute address where the transmission start
   uint64_t start_addr = priv->piton_sd_base_addr + (start_block);
 
-#ifdef DEBUGFF
-  printf("sd card debug: command index is %d\n", cmd->cmdidx);
-  printf("sd card debug: command argument is %d\n", cmd->cmdarg);
-  printf("sd card debug: command response type is %d\n", cmd->resp_type);
-#endif
-  // TODO: handle command response
-
   /* if data is not empty*/
   if (data) {
-#ifdef DEBUGFF
-    printf("sd card debug: data source is %lld\n", start_addr);
-    printf("sd card debug: data destination is %p\n", data->dest);
-    printf("sd card debug: data number of blocks is is %d\n", data->blocks);
-    printf("sd card debug: data blocksize is %d\n", data->blocksize);
-    printf("sd card debug: data flag is %d\n", data->flags);
-#endif
-    // FIXME: pin the sd card to 512 sector
 
     /* if there is a read */
     if (data->flags & MMC_DATA_READ) {
@@ -94,14 +62,11 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
         buff++;
       }
     } else {
-      //printf("wrong command! Only read is supported\n");
       /* else there is a write
        * we don't handle write, so error right away
        */
       return -ENODEV;
     }
-  } else {
-    //printf("data is empty\n");
   }
 
   return 0;
@@ -176,11 +141,9 @@ static const struct dm_mmc_ops piton_mmc_ops = {
     .get_cd = piton_mmc_getcd,
 };
 
-// TODO: bind block size here
 static int piton_mmc_probe(struct udevice *dev) {
   struct mmc_uclass_priv *upriv = dev_get_uclass_priv(dev);
   struct piton_mmc_plat *plat = dev_get_platdata(dev);
-  struct piton_mmc_priv *priv = dev_get_uclass_priv(dev);
   struct mmc_config *cfg = &plat->cfg;
 
   cfg->name = dev->name;

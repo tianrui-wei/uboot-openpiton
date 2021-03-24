@@ -1,7 +1,7 @@
 if TARGET_OPENPITON_ARIANE
 
 config SYS_BOARD
-	default "ariane"
+	default "riscv"
 
 config SYS_VENDOR
 	default "openpiton"
@@ -10,7 +10,7 @@ config SYS_CPU
 	default "generic"
 
 config SYS_CONFIG_NAME
-	default "openpiton-ariane"
+	default "openpiton-riscv"
 
 config SYS_TEXT_BASE
 	default 0x81200000 if SPL
@@ -25,7 +25,18 @@ config SPL_OPENSBI_LOAD_ADDR
 
 config BOARD_SPECIFIC_OPTIONS # dummy
 	def_bool y
-	select OPENPITON_ARIANE
+	select ARCH_EARLY_INIT_R
+	select SUPPORT_SPL
+	imply CPU_RISCV
+	imply RISCV_TIMER if (RISCV_SMODE || SPL_RISCV_SMODE)
+	imply SIFIVE_CLINT if (RISCV_MMODE || SPL_RISCV_MMODE)
+	imply CMD_CPU
+	imply SPL_CPU_SUPPORT
+	imply SPL_OPENSBI
+	imply SPL_LOAD_FIT
+    imply SPL_SMP
+    imply SPL_MMC
+	imply SMP
     imply SPL_RISCV_MMODE
 
 endif

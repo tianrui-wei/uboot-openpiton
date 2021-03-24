@@ -60,13 +60,12 @@ source "board/emulation/qemu-riscv/Kconfig"
 source "board/microchip/mpfs_icicle/Kconfig"
 source "board/sifive/fu540/Kconfig"
 source "board/sipeed/maix/Kconfig"
-source "board/openpiton/ariane/Kconfig"
+source "board/openpiton/riscv/Kconfig"
 
 # platform-specific options below
 source "arch/riscv/cpu/ax25/Kconfig"
 source "arch/riscv/cpu/fu540/Kconfig"
 source "arch/riscv/cpu/generic/Kconfig"
-source "arch/riscv/cpu/ariane/Kconfig"
 
 # architecture-specific options below
 
