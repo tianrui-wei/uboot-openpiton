@@ -13,9 +13,9 @@ config SYS_CONFIG_NAME
 	default "openpiton-riscv"
 
 config SYS_TEXT_BASE
-	default 0x81200000 if SPL
+	default 0x81000000 if SPL
 	default 0x80000000 if !RISCV_SMODE
-	default 0x81200000 if RISCV_SMODE
+	default 0x81000000 if RISCV_SMODE
 
 config SPL_TEXT_BASE
 	default 0x80000000
