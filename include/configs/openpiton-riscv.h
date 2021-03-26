@@ -12,7 +12,7 @@
 #define __OPENPITON_RISCV_CONFIG_H
 
 #include <linux/sizes.h>
-
+#define DEBUG
 #ifdef CONFIG_SPL
 #define CONFIG_SPL_MAX_SIZE     0x00100000
 #define CONFIG_SPL_BSS_START_ADDR   0x82000000
@@ -23,7 +23,7 @@
 #define CONFIG_SPL_STACK    (0x80000000 + 0x04000000 - \
         GENERATED_GBL_DATA_SIZE)
 
-#define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "fw_payload.bin"
+#define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "boot/fw_payload.bin"
 #define CONFIG_SPL_GD_ADDR 0x85000000
 #endif
 
