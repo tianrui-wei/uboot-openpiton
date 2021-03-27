@@ -50,7 +50,7 @@
 #define CONFIG_BOOTCOMMAND \
     "fdt addr ${fdtcontroladdr}; " \
     "fdt move ${fdtcontroladdr} 0x86000000; " \
-    "ext4load mmc 0:1 0x80200000 Image; " \
+    "ext4load mmc 0:1 0x80200000 boot/Image; " \
     "booti 0x80200000 - 0x86000000; "
 
 #define CONFIG_TIMESTAMP	/* Print image info with timestamp */
