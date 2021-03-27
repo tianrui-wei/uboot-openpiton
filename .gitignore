@@ -95,5 +95,3 @@ GTAGS
 
 # Python cache
 __pycache__
-
-!.gdbinit
