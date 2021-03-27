@@ -58,7 +58,6 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
     if (data->flags & MMC_DATA_READ) {
       for (uint64_t i = 0; i < byte_cnt; i += 4) {
         *(buff) = readl((void *)(start_addr + i));
-        //printf("sd card debug: read data is 0x%08d\n", readl((void *)(start_addr + i)));
         buff++;
       }
     } else {
@@ -79,7 +78,6 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
   struct mmc_config *cfg;
   struct mmc *mmc;
 
-  //FIXME: wrong base addrss
   priv->piton_sd_base_addr = 0xf000000000L;
   cfg = &plat->cfg;
   cfg->name = "PITON MMC";
@@ -117,7 +115,7 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
  */
 static int piton_mmc_set_ios(struct udevice *dev) { return 0; }
 
-/* test if piton has the micro sd card present
+/* test if piton has the micro mmc card present
  * always return 1, which means present
  */
 static int piton_mmc_getcd(struct udevice *dev) {
@@ -125,13 +123,12 @@ static int piton_mmc_getcd(struct udevice *dev) {
   return 1;
 }
 
-/* dummy function, piton_sd don't need initialization in hw*/
+/* dummy function, piton_mmc don't need initialization in hw*/
 static int piton_mmc_init(struct udevice *dev) {
 
   return 0;
 }
 
-// TODO: add more operation here
 static const struct dm_mmc_ops piton_mmc_ops = {
     // send a command to mmc device
     .send_cmd = piton_mmc_send_cmd,
