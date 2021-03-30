@@ -27,7 +27,7 @@ struct piton_mmc_plat {
 };
 
 struct piton_mmc_priv {
-  uint64_t piton_sd_base_addr; /* peripheral id */
+  uint64_t piton_mmc_base_addr; /* peripheral id */
 };
 
 // see mmc_read_blocks to see how it is used.
@@ -42,14 +42,14 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 
   // byte count counts all the bytes required for this command
   uint64_t byte_cnt = data->blocks * data->blocksize;
-  // get which block in sd card to start from
+  // get which block in mmc card to start from
   uint64_t start_block = cmd->cmdarg;
-  // buff points to the address we store the data stored at sd card
+  // buff points to the address we store the data stored at mmc card
   unsigned *buff = (unsigned int *) data->dest;
 
   struct piton_mmc_priv *priv = dev_get_priv(dev);
   // start address denotes the absolute address where the transmission start
-  uint64_t start_addr = priv->piton_sd_base_addr + (start_block);
+  uint64_t start_addr = priv->piton_mmc_base_addr + (start_block);
 
   /* if data is not empty*/
   if (data) {
@@ -78,7 +78,7 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
   struct mmc_config *cfg;
   struct mmc *mmc;
 
-  priv->piton_sd_base_addr = 0xf000000000L;
+  priv->piton_mmc_base_addr = dev_read_addr(dev);
   cfg = &plat->cfg;
   cfg->name = "PITON MMC";
   cfg->host_caps = MMC_MODE_8BIT;
