@@ -15,25 +15,27 @@
 #include <spl.h>
 
 #ifdef CONFIG_SPL
-void board_boot_order(u32 *spl_boot_list) {
-  u8 i;
-  u32 boot_devices[] = {
-    BOOT_DEVICE_MMC1,
-  };
+void board_boot_order(u32 *spl_boot_list)
+{
+	u8 i;
+	u32 boot_devices[] = {
+		BOOT_DEVICE_MMC1,
+	};
 
-  for (i = 0; i < ARRAY_SIZE(boot_devices); i++)
-    spl_boot_list[i] = boot_devices[i];
+	for (i = 0; i < ARRAY_SIZE(boot_devices); i++)
+		spl_boot_list[i] = boot_devices[i];
 }
 #endif
 
 #ifdef CONFIG_SPL_LOAD_FIT
-int board_fit_config_name_match(const char *name) {
-  /* boot using first FIT config */
-  return 0;
+int board_fit_config_name_match(const char *name)
+{
+	/* boot using first FIT config */
+	return 0;
 }
 #endif
 
-int board_init()
+int board_init(void)
 {
-    return 0;
+		return 0;
 }

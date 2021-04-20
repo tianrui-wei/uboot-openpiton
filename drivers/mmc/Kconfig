@@ -709,7 +709,6 @@ config MMC_SUNXI_HAS_MODE_SWITCH
 
 config MMC_PITON
 	bool "MMC support for openpiton SoC"
-	default y
 	help
     This driver enables sd card support in uboot port for openpiton
 

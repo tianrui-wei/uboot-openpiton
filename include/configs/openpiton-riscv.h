@@ -18,10 +18,10 @@
 #define CONFIG_SPL_BSS_START_ADDR   0x82000000
 #define CONFIG_SPL_BSS_MAX_SIZE     0x00100000
 #define CONFIG_SYS_SPL_MALLOC_START (CONFIG_SPL_BSS_START_ADDR + \
-        CONFIG_SPL_BSS_MAX_SIZE)
+		CONFIG_SPL_BSS_MAX_SIZE)
 #define CONFIG_SYS_SPL_MALLOC_SIZE  0x0100000
 #define CONFIG_SPL_STACK    (0x80000000 + 0x04000000 - \
-        GENERATED_GBL_DATA_SIZE)
+		GENERATED_GBL_DATA_SIZE)
 
 #define CONFIG_SPL_FS_LOAD_PAYLOAD_NAME "boot/fw_payload.bin"
 #define CONFIG_SPL_GD_ADDR 0x85000000
@@ -48,10 +48,10 @@
 
 #define CONFIG_USE_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND \
-    "fdt addr ${fdtcontroladdr}; " \
-    "fdt move ${fdtcontroladdr} 0x86000000; " \
-    "ext4load mmc 0:1 0x80200000 boot/Image; " \
-    "booti 0x80200000 - 0x86000000; "
+	"fdt addr ${fdtcontroladdr}; " \
+	"fdt move ${fdtcontroladdr} 0x86000000; " \
+	"ext4load mmc 0:1 0x80200000 boot/Image; " \
+	"booti 0x80200000 - 0x86000000; "
 
 #define CONFIG_TIMESTAMP	/* Print image info with timestamp */
 
