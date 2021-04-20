@@ -34,7 +34,7 @@ struct piton_mmc_priv {
 // start block is hidden at cmd->arg
 // also, initialize the block size at init
 static int piton_mmc_send_cmd(
-		struct udevice *dev, 
+		struct udevice *dev,
 		struct mmc_cmd *cmd,
 		struct mmc_data *data
 )
