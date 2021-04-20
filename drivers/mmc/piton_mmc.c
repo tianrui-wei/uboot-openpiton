@@ -33,8 +33,11 @@ struct piton_mmc_priv {
 // see mmc_read_blocks to see how it is used.
 // start block is hidden at cmd->arg
 // also, initialize the block size at init
-static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
-															struct mmc_data *data)
+static int piton_mmc_send_cmd(
+		struct udevice *dev, 
+		struct mmc_cmd *cmd,
+		struct mmc_data *data
+)
 {
 	// check first if this is a pure command
 	if (data == NULL) {
@@ -134,7 +137,8 @@ static const struct dm_mmc_ops piton_mmc_ops = {
 		.get_cd = piton_mmc_getcd,
 };
 
-static int piton_mmc_probe(struct udevice *dev) {
+static int piton_mmc_probe(struct udevice *dev)
+{
 	struct mmc_uclass_priv *upriv = dev_get_uclass_priv(dev);
 	struct piton_mmc_plat *plat = dev_get_platdata(dev);
 	struct mmc_config *cfg = &plat->cfg;

@@ -85,7 +85,8 @@
 			current-speed = <115200>;
 			interrupt-parent = <&PLIC0>;
 			interrupts = <1>;
-			reg-shift = <0>; // regs are spaced on 8 bit boundary (modified from Xilinx UART16550 to be ns16550 compatible)
+			reg-shift = <0>;
+			// regs are spaced on 8 bit boundary
 		};
 
 		eth: ethernet@fff0d00000 {
@@ -117,7 +118,8 @@
 
 		debug-controller@fff1000000 {
 			compatible = "riscv,debug-013";
-			interrupts-extended = <&CPU0_intc 65535 &CPU1_intc 65535 >;
+			interrupts-extended = < &CPU0_intc 65535
+									&CPU1_intc 65535 >;
 			reg = < 0x000000ff 0xf1000000 0x00000000 0x00001000 >;
 			reg-names = "control";
 		};
@@ -131,7 +133,10 @@
 		clint@fff1020000 {
 			u-boot,dm-pre-reloc;
 			compatible = "riscv,clint0";
-			interrupts-extended = <&CPU0_intc 3 &CPU0_intc 7 &CPU1_intc 3 &CPU1_intc 7 >;
+			interrupts-extended = < &CPU0_intc 3
+									&CPU0_intc 7
+									&CPU1_intc 3
+									&CPU1_intc 7 >;
 			reg = < 0x000000ff 0xf1020000 0x00000000 0x000c0000 >;
 			reg-names = "control";
 		};
@@ -142,7 +147,10 @@
 			#interrupt-cells = <1>;
 			compatible = "riscv,plic0";
 			interrupt-controller;
-			interrupts-extended = <&CPU0_intc 11 &CPU0_intc 9 &CPU1_intc 11 &CPU1_intc 9 >;
+			interrupts-extended = < &CPU0_intc 11
+									&CPU0_intc 9
+									&CPU1_intc 11
+									&CPU1_intc 9 >;
 			reg = < 0x000000ff 0xf1100000 0x00000000 0x04000000 >;
 			riscv,max-priority = <7>;
 			riscv,ndev = <2>;
