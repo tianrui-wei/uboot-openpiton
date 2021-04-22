@@ -58,9 +58,9 @@ config SPL_SYS_DCACHE_OFF
 source "board/AndesTech/ax25-ae350/Kconfig"
 source "board/emulation/qemu-riscv/Kconfig"
 source "board/microchip/mpfs_icicle/Kconfig"
+source "board/openpiton/riscv/Kconfig"
 source "board/sifive/fu540/Kconfig"
 source "board/sipeed/maix/Kconfig"
-source "board/openpiton/riscv/Kconfig"
 
 # platform-specific options below
 source "arch/riscv/cpu/ax25/Kconfig"
