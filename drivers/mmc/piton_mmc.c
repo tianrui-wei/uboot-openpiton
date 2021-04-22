@@ -30,14 +30,13 @@ struct piton_mmc_priv {
 	u64 piton_mmc_base_addr; /* peripheral id */
 };
 
-// see mmc_read_blocks to see how it is used.
-// start block is hidden at cmd->arg
-// also, initialize the block size at init
-static int piton_mmc_send_cmd(
-		struct udevice *dev,
-		struct mmc_cmd *cmd,
-		struct mmc_data *data
-)
+/*
+ * see mmc_read_blocks to see how it is used.
+ * start block is hidden at cmd->arg
+ * also, initialize the block size at init
+ */
+static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
+                        struct mmc_data *data)
 {
 	// check first if this is a pure command
 	if (data == NULL) {
@@ -55,24 +54,20 @@ static int piton_mmc_send_cmd(
 	// start address denotes the absolute address where the transmission start
 	u64 start_addr = priv->piton_mmc_base_addr + (start_block);
 
-	/* if data is not empty*/
-	if (data) {
+        /* if there is a read */
+  if (data->flags & MMC_DATA_READ) {
+    for (u64 i = 0; i < byte_cnt; i += 4) {
+      *(buff) = readl((void *)(start_addr + i));
+      buff++;
+    }
+  } else {
+    /* else there is a write
+     * we don't handle write, so error right away
+     */
+    return -ENODEV;
+  }
 
-		/* if there is a read */
-		if (data->flags & MMC_DATA_READ) {
-			for (u64 i = 0; i < byte_cnt; i += 4) {
-				*(buff) = readl((void *)(start_addr + i));
-				buff++;
-			}
-		} else {
-			/* else there is a write
-			 * we don't handle write, so error right away
-			 */
-			return -ENODEV;
-		}
-	}
-
-	return 0;
+  return 0;
 }
 
 static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
@@ -81,8 +76,10 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 	struct piton_mmc_plat *plat = dev_get_platdata(dev);
 	struct mmc_config *cfg;
 	struct mmc *mmc;
+  /* fill in device description */
+  struct blk_desc *bdesc;
 
-	priv->piton_mmc_base_addr = dev_read_addr(dev);
+  priv->piton_mmc_base_addr = dev_read_addr(dev);
 	cfg = &plat->cfg;
 	cfg->name = "PITON MMC";
 	cfg->host_caps = MMC_MODE_8BIT;
@@ -100,9 +97,6 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 		mmc->capacity_gp[i] = 0;
 	mmc->capacity = 0x2000000000ULL;
 	mmc->has_init = 1;
-
-	/* fill in device description */
-	struct blk_desc *bdesc;
 
 	bdesc = mmc_get_blk_desc(mmc);
 	bdesc->lun = 0;
@@ -126,15 +120,13 @@ static int piton_mmc_set_ios(struct udevice *dev) { return 0; }
 static int piton_mmc_getcd(struct udevice *dev) { return 1; }
 
 /* dummy function, piton_mmc don't need initialization in hw*/
-static int piton_mmc_init(struct udevice *dev) { return 0; }
-
 static const struct dm_mmc_ops piton_mmc_ops = {
-		// send a command to mmc device
-		.send_cmd = piton_mmc_send_cmd,
-		// set iospeed
-		.set_ios = piton_mmc_set_ios,
-		// detect if card is present
-		.get_cd = piton_mmc_getcd,
+	// send a command to mmc device
+	.send_cmd = piton_mmc_send_cmd,
+	// set iospeed
+	.set_ios = piton_mmc_set_ios,
+	// detect if card is present
+	.get_cd = piton_mmc_getcd,
 };
 
 static int piton_mmc_probe(struct udevice *dev)
@@ -149,7 +141,7 @@ static int piton_mmc_probe(struct udevice *dev)
 	upriv->mmc->capacity = 0x2000000000ULL;
 	upriv->mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
 
-	return piton_mmc_init(dev);
+	return 0;
 }
 
 static int piton_mmc_bind(struct udevice *dev)
@@ -168,17 +160,18 @@ static int piton_mmc_bind(struct udevice *dev)
 }
 
 static const struct udevice_id piton_mmc_ids[] = {
-		{.compatible = "openpiton,piton-mmc"}, {}
+		{.compatible = "openpiton,piton-mmc"},
+    { /* sentinel */ }
 };
 
 U_BOOT_DRIVER(piton_mmc_drv) = {
-		.name = "piton_mmc",
-		.id = UCLASS_MMC,
-		.of_match = piton_mmc_ids,
-		.ofdata_to_platdata = piton_mmc_ofdata_to_platdata,
-		.bind = piton_mmc_bind,
-		.probe = piton_mmc_probe,
-		.ops = &piton_mmc_ops,
-		.platdata_auto_alloc_size = sizeof(struct piton_mmc_plat),
-		.priv_auto_alloc_size = sizeof(struct piton_mmc_priv),
+	.name = "piton_mmc",
+	.id = UCLASS_MMC,
+	.of_match = piton_mmc_ids,
+	.ofdata_to_platdata = piton_mmc_ofdata_to_platdata,
+	.bind = piton_mmc_bind,
+	.probe = piton_mmc_probe,
+	.ops = &piton_mmc_ops,
+	.platdata_auto_alloc_size = sizeof(struct piton_mmc_plat),
+	.priv_auto_alloc_size = sizeof(struct piton_mmc_priv),
 };
