@@ -36,7 +36,7 @@ struct piton_mmc_priv {
  * also, initialize the block size at init
  */
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
-                        struct mmc_data *data)
+												struct mmc_data *data)
 {
 	// check first if this is a pure command
 	if (data == NULL) {
@@ -54,20 +54,20 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 	// start address denotes the absolute address where the transmission start
 	u64 start_addr = priv->piton_mmc_base_addr + (start_block);
 
-        /* if there is a read */
-  if (data->flags & MMC_DATA_READ) {
-    for (u64 i = 0; i < byte_cnt; i += 4) {
-      *(buff) = readl((void *)(start_addr + i));
-      buff++;
-    }
-  } else {
-    /* else there is a write
-     * we don't handle write, so error right away
-     */
-    return -ENODEV;
-  }
+	/* if there is a read */
+	if (data->flags & MMC_DATA_READ) {
+		for (u64 i = 0; i < byte_cnt; i += 4) {
+			*(buff) = readl((void *)(start_addr + i));
+			buff++;
+		}
+	} else {
+		/* else there is a write
+		 * we don't handle write, so error right away
+		 */
+		return -ENODEV;
+	}
 
-  return 0;
+	return 0;
 }
 
 static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
@@ -76,10 +76,10 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 	struct piton_mmc_plat *plat = dev_get_platdata(dev);
 	struct mmc_config *cfg;
 	struct mmc *mmc;
-  /* fill in device description */
-  struct blk_desc *bdesc;
+	/* fill in device description */
+	struct blk_desc *bdesc;
 
-  priv->piton_mmc_base_addr = dev_read_addr(dev);
+	priv->piton_mmc_base_addr = dev_read_addr(dev);
 	cfg = &plat->cfg;
 	cfg->name = "PITON MMC";
 	cfg->host_caps = MMC_MODE_8BIT;
@@ -161,7 +161,7 @@ static int piton_mmc_bind(struct udevice *dev)
 
 static const struct udevice_id piton_mmc_ids[] = {
 		{.compatible = "openpiton,piton-mmc"},
-    { /* sentinel */ }
+		{ /* sentinel */ }
 };
 
 U_BOOT_DRIVER(piton_mmc_drv) = {

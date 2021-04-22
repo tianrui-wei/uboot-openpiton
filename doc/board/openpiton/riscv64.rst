@@ -15,7 +15,7 @@ This board supports S-mode u-boot as well as M-mode SPL
 
 Building OpenPition
 ---------------------
-If you'd like to build OpenPiton, please go to OpenPiton github repo to build from the latest chnages
+If you'd like to build OpenPiton, please go to OpenPiton github repo to build from the latest changes
 
 Building Images
 ---------------------------
