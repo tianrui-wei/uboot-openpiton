@@ -167,7 +167,7 @@ Sample Dual-core Debian boot log from OpenPiton
   image entry point: 0x
   ofnode_read_u32_index: reg: x (0)
   ofnode_read_u32_index: reg: x (1)
-  
+
   OpenSBI v0.9-5-gd06cb61
      ____                    _____ ____ _____
     / __ \                  / ____|  _ \_   _|
@@ -177,14 +177,14 @@ Sample Dual-core Debian boot log from OpenPiton
     \____/| .__/ \___|_| |_|_____/|____/_____|
           | |
           |_|
-  
+
   Platform Name             : OPENPITON RISC-V
   Platform Features         : timer,mfdeleg
   Platform HART Count       : 3
   Firmware Base             : 0x81000000
   Firmware Size             : 104 KB
   Runtime SBI Version       : 0.2
-  
+
   Domain0 Name              : root
   Domain0 Boot HART         : 0
   Domain0 HARTs             : 0*,1*,2*
@@ -194,7 +194,7 @@ Sample Dual-core Debian boot log from OpenPiton
   Domain0 Next Arg1         : 0x0000000082200000
   Domain0 Next Mode         : S-mode
   Domain0 SysReset          : yes
-  
+
   Boot HART ID              : 0
   Boot HART Domain          : root
   Boot HART ISA             : rv64imafdcsu
@@ -294,10 +294,10 @@ Sample Dual-core Debian boot log from OpenPiton
   clk_get_by_index_tail: Node 'uart@fff0c2c000', property 'clocks', failed to request CLK index 0: -2
   ofnode_read_u32_index: clock-frequency: 0x3f941f8 (66667000)
   initcall: 0000000081220592
-  
-  
+
+
   U-Boot 2021.01-g17d45f5d-dirty (Mar 14 2021 - 20:31:58 +0800)
-  
+
   initcall: 0000000081205db8
   U-Boot code: 81200000 -> 8123F0C0  BSS: -> 81241D10
   initcall: 0000000081205cfe
@@ -329,10 +329,10 @@ Sample Dual-core Debian boot log from OpenPiton
   initcall: 000000008120031c
   fdtdec_setup_memory_banksize: DRAM Bank #0: start = 0x80000000, size = 0x40000000
   initcall: 0000000081205f5a
-  
+
   RAM Configuration:
   Bank #0: 80000000 1 GiB
-  
+
   DRAM:  1 GiB
   initcall: 0000000081206054
   initcall: 0000000081205d24
@@ -476,7 +476,7 @@ Sample Dual-core Debian boot log from OpenPiton
   initcall: 000000008120611c (relocated to 00000000bffc411c)
   fdtdec_get_config_int: bootdelay
   ### main_loop entered: bootdelay=-2
-  
+
   fdtdec_get_config_int: kernel-offset
   fdtdec_get_config_int: rootdisk-offset
   fdtdec_get_config_string: bootcmd
@@ -560,7 +560,7 @@ Sample Dual-core Debian boot log from OpenPiton
       memory.size            = 0x0
       memory.reg[0x0].base   = 0x80000000
                      .size   = 0x40000000
-  
+
       reserved.cnt           = 0x0
       reserved.size          = 0x0
   Iterate dir Image
@@ -618,9 +618,9 @@ Sample Dual-core Debian boot log from OpenPiton
   Initial value for argc=3
   Final value for argc=3
   ## Transferring control to kernel (at address 80200000) ...
-  
+
   Starting kernel ...
-  
+
   [    0.000000] OF: fdt: Ignoring memory range 0x80000000 - 0x80200000
   [    0.000000] Linux version 5.6.0-rc4-gb9d34f7e294d-dirty (eva@eva-virtual-machine) (gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)) #27 SMP Mon Mar 1 23:47:04 CST 2021
   [    0.000000] earlycon: sbi0 at I/O port 0x0 (options '')
@@ -752,9 +752,9 @@ Sample Dual-core Debian boot log from OpenPiton
   [   19.340844] systemd[1]: systemd 238 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 -SECCOMP +BLKID +ELFUTILS +KMOD -IDN2 +IDN -PCRE2 defaul
   t-hierarchy=hybrid)
   [   19.370409] systemd[1]: Detected architecture riscv64.
-  
+
   Welcome to Debian GNU/Linux buster/sid!
-  
+
   [   19.587454] systemd[1]: Set hostname to <openpiton>.
   [   29.215526] random: systemd: uninitialized urandom read (16 bytes read)
   [   29.234429] systemd[1]: Listening on /dev/initctl Compatibility Named Pipe.
@@ -844,36 +844,7 @@ Sample Dual-core Debian boot log from OpenPiton
   [  OK  ] Stopped Network Time Synchronization.
   [FAILED] Failed to start Network Time Synchronization.
   See 'systemctl status systemd-timesyncd.service' for details.
-  [*     ] (2 of 2) A start job is running for&v-hvc0.device (2min 6s / 4min 33s)[  179.483704] rcu: INFO: rcu_sched self-detected stall on CPU
-  [  179.489734] rcu:     0-...!: (2099 ticks this GP) idle=40a/1/0x4000000000000002 softirq=12055/12055 fqs=0
-  [  179.499286]  (t=2100 jiffies g=8617 q=11)
-  [  179.503516] rcu: rcu_sched kthread starved for 2100 jiffies! g8617 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
-  [  179.513786] rcu: RCU grace-period kthread stack dump:
-  [  179.518953] rcu_sched       I    0    10      2 0x00000000
-  [  179.524619] Call Trace:
-  [  179.527385] [<ffffffe0004666ee>] __schedule+0x15e/0x422
-  [  179.532767] [<ffffffe000466a12>] schedule+0x60/0xda
-  [  179.537947] [<ffffffe00046a960>] schedule_timeout+0x122/0x17e
-  [  179.544089] [<ffffffe00007ec36>] rcu_gp_kthread+0x802/0xae2
-  [  179.549924] [<ffffffe00004a676>] kthread+0xe4/0xf2
-  [  179.554976] [<ffffffe00002c46c>] ret_from_exception+0x0/0xc
-  [  179.561049] Task dump for CPU 0:
-  [  179.564480] systemd-udevd   D    0   144    102 0x00000008
-  [  179.570147] Call Trace:
-  [  179.572834] [<ffffffe00002d786>] walk_stackframe+0x0/0xa0
-  [  179.578473] [<ffffffe00002d8a8>] show_stack+0x2a/0x34
-  [  179.583885] [<ffffffe00004f4e0>] sched_show_task+0x12a/0x148
-  [  179.589772] [<ffffffe000053e0c>] dump_cpu_task+0x3e/0x48
-  [  179.595440] [<ffffffe00007ffaa>] rcu_dump_cpu_stacks+0x82/0xba
-  [  179.601501] [<ffffffe00007f648>] rcu_sched_clock_irq+0x40c/0x61a
-  [  179.607804] [<ffffffe000084152>] update_process_times+0x1e/0x40
-  [  179.614092] [<ffffffe00008e31c>] tick_sched_timer+0x72/0x20e
-  [  179.620000] [<ffffffe000084820>] __hrtimer_run_queues+0xb2/0x10a
-  [  179.626271] [<ffffffe000084da2>] hrtimer_interrupt+0xb8/0x1d6
-  [  179.632325] [<ffffffe0003304e0>] riscv_timer_interrupt+0x32/0x3a
-  [  179.638689] [<ffffffe00046b8d0>] do_IRQ+0xb8/0xba
-  [  179.643677] [<ffffffe00002c46c>] ret_from_exception+0x0/0xc
-  [  179.649489] [<ffffffe000468872>] __mutex_lock.isra.3+0xde/0x51a
+  [*     ] (2 of 2) A start job is running for&v-hvc0.device (2min 6s / 4min 33s)
   [  OK  ] Found device /dev/hvc0.
   [  OK  ] Started udev Coldplug all Devices.
   [  OK  ] Reached target System Initialization.
@@ -889,17 +860,17 @@ Sample Dual-core Debian boot log from OpenPiton
   [  OK  ] Reached target Login Prompts.
   [  OK  ] Reached target Multi-User System.
   [  OK  ] Reached target Graphical Interface.
-  
+
   Debian GNU/Linux buster/sid openpiton hvc0
-  
+
   openpiton login: openpiton
   Password:
   Linux openpiton 5.6.0-rc4-gb9d34f7e294d-dirty #27 SMP Mon Mar 1 23:47:04 CST 2021 riscv64
-  
+
   The programs included with the Debian GNU/Linux system are free software;
   the exact distribution terms for each program are described in the
   individual files in /usr/share/doc/*/copyright.
-  
+
   Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
   permitted by applicable law.
   openpiton@openpiton:~$ lscpu
