@@ -38,20 +38,16 @@ struct piton_mmc_priv {
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 												struct mmc_data *data)
 {
-	// check first if this is a pure command
+	/* check first if this is a pure command */
 	if (data == NULL) {
 		return 0;
 	}
 
-	// byte count counts all the bytes required for this command
 	u64 byte_cnt = data->blocks * data->blocksize;
-	// get which block in mmc card to start from
 	u64 start_block = cmd->cmdarg;
-	// buff points to the address we store the data stored at mmc card
 	unsigned *buff = (unsigned int *) data->dest;
 
 	struct piton_mmc_priv *priv = dev_get_priv(dev);
-	// start address denotes the absolute address where the transmission start
 	u64 start_addr = priv->piton_mmc_base_addr + (start_block);
 
 	/* if there is a read */
@@ -109,23 +105,21 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 	return 0;
 }
 
-/*
- * currently, this is ignored. we only use fixed speed
- */
-static int piton_mmc_set_ios(struct udevice *dev) { return 0; }
 
 /* test if piton has the micro mmc card present
  * always return 1, which means present
  */
-static int piton_mmc_getcd(struct udevice *dev) { return 1; }
+static int piton_mmc_getcd(struct udevice *dev) {
+	/*
+	 * always return 1
+	 */
+	return 1;
+}
 
 /* dummy function, piton_mmc don't need initialization in hw*/
 static const struct dm_mmc_ops piton_mmc_ops = {
-	// send a command to mmc device
 	.send_cmd = piton_mmc_send_cmd,
-	// set iospeed
 	.set_ios = piton_mmc_set_ios,
-	// detect if card is present
 	.get_cd = piton_mmc_getcd,
 };
 
