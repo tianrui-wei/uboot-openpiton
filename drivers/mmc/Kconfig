@@ -711,7 +711,8 @@ config MMC_PITON
 	bool "MMC support for openpiton SoC"
   depends on DM_MMC && BLK
 	help
-    This driver enables sd card support in U-Boot port for openpiton
+    This driver enables SD card support in U-Boot port for
+    OpenPiton SoC
 
 config GENERIC_ATMEL_MCI
 	bool "Atmel Multimedia Card Interface support"

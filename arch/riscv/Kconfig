@@ -24,7 +24,7 @@ config TARGET_SIPEED_MAIX
 	bool "Support Sipeed Maix Board"
 
 config TARGET_OPENPITON_RISCV
-    bool "Support riscv cores on openpiton SoC"
+  bool "Support riscv cores on openpiton SoC"
 
 endchoice
 

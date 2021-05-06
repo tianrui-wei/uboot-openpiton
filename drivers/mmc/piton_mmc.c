@@ -39,13 +39,12 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 												struct mmc_data *data)
 {
 	/* check first if this is a pure command */
-	if (data == NULL) {
+	if (!data)
 		return 0;
-	}
 
 	u64 byte_cnt = data->blocks * data->blocksize;
 	u64 start_block = cmd->cmdarg;
-	unsigned *buff = (unsigned int *) data->dest;
+	unsigned int *buff = (unsigned int *) data->dest;
 
 	struct piton_mmc_priv *priv = dev_get_priv(dev);
 	u64 start_addr = priv->piton_mmc_base_addr + (start_block);
@@ -105,18 +104,19 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 	return 0;
 }
 
-
 /* test if piton has the micro mmc card present
  * always return 1, which means present
  */
-static int piton_mmc_getcd(struct udevice *dev) {
+static int piton_mmc_getcd(struct udevice *dev)
+{
 	/*
 	 * always return 1
 	 */
 	return 1;
 }
 
-/* dummy function, piton_mmc don't need initialization in hw*/
+/* dummy function, piton_mmc don't need initialization
+   in hw*/
 static const struct dm_mmc_ops piton_mmc_ops = {
 	.send_cmd = piton_mmc_send_cmd,
 	.set_ios = piton_mmc_set_ios,
