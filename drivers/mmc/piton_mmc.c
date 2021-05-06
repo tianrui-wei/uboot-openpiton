@@ -36,7 +36,7 @@ struct piton_mmc_priv {
  * also, initialize the block size at init
  */
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
-                              struct mmc_data *data)
+							  struct mmc_data *data)
 {
 	/* check first if this is a pure command */
 	if (!data)
