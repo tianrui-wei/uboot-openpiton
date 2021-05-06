@@ -36,7 +36,7 @@ struct piton_mmc_priv {
  * also, initialize the block size at init
  */
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
-												struct mmc_data *data)
+                              struct mmc_data *data)
 {
 	/* check first if this is a pure command */
 	if (!data)
@@ -44,7 +44,7 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 
 	u64 byte_cnt = data->blocks * data->blocksize;
 	u64 start_block = cmd->cmdarg;
-	unsigned int *buff = (unsigned int *) data->dest;
+	unsigned int *buff = (unsigned int *)data->dest;
 
 	struct piton_mmc_priv *priv = dev_get_priv(dev);
 	u64 start_addr = priv->piton_mmc_base_addr + (start_block);
@@ -116,7 +116,8 @@ static int piton_mmc_getcd(struct udevice *dev)
 }
 
 /* dummy function, piton_mmc don't need initialization
-   in hw*/
+ * in hw
+ */
 static const struct dm_mmc_ops piton_mmc_ops = {
 	.send_cmd = piton_mmc_send_cmd,
 	.set_ios = piton_mmc_set_ios,
