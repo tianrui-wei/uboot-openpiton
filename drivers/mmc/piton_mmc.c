@@ -5,6 +5,7 @@
  * Jaehoon Chung <jh80.chung@samsung.com>
  * Portions Copyright 2011-2019 NVIDIA Corporation
  * Portions Copyright 2021 Tianrui Wei
+ * This file is adapted from tegra_mmc.c
  * Tianrui Wei <tianrui-wei@outlook.com>
  */
 
@@ -42,12 +43,14 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 	if (!data)
 		return 0;
 
-	u64 byte_cnt = data->blocks * data->blocksize;
-	u64 start_block = cmd->cmdarg;
-	unsigned int *buff = (unsigned int *)data->dest;
+	u64 byte_cnt, start_block, start_addr;
 
 	struct piton_mmc_priv *priv = dev_get_priv(dev);
-	u64 start_addr = priv->piton_mmc_base_addr + (start_block);
+	unsigned long *buff = (unsigned long *)data->dest;
+
+	start_addr = priv->piton_mmc_base_addr + (start_block);
+	byte_cnt = data->blocks * data->blocksize;
+	start_block = cmd->cmdarg;
 
 	/* if there is a read */
 	if (data->flags & MMC_DATA_READ) {
@@ -120,7 +123,6 @@ static int piton_mmc_getcd(struct udevice *dev)
  */
 static const struct dm_mmc_ops piton_mmc_ops = {
 	.send_cmd = piton_mmc_send_cmd,
-	.set_ios = piton_mmc_set_ios,
 	.get_cd = piton_mmc_getcd,
 };
 

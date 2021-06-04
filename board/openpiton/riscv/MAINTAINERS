@@ -1,4 +1,4 @@
-Openpiton Riscv Bootloader
+Openpiton BOARD
 M:	Tianrui Wei<tianrui-wei@outlook.com>
 S:	Maintained
 F:	board/openpiton/riscv/
