@@ -43,14 +43,15 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 	if (!data)
 		return 0;
 
-	u64 byte_cnt, start_block, start_addr;
 
 	struct piton_mmc_priv *priv = dev_get_priv(dev);
-	unsigned long *buff = (unsigned long *)data->dest;
-
-	start_addr = priv->piton_mmc_base_addr + (start_block);
-	byte_cnt = data->blocks * data->blocksize;
+    unsigned int *buff;
+    u64 byte_cnt, start_block, start_addr;
+	
+    buff = (unsigned int *)data->dest;
+    byte_cnt = data->blocks * data->blocksize;
 	start_block = cmd->cmdarg;
+    start_addr = priv->piton_mmc_base_addr + (start_block);
 
 	/* if there is a read */
 	if (data->flags & MMC_DATA_READ) {
