@@ -1,6 +1,0 @@
-Openpiton BOARD
-M:	Tianrui Wei<tianrui-wei@outlook.com>
-S:	Maintained
-F:	board/openpiton/riscv/
-F:	include/configs/openpiton-riscv.h
-F:	configs/openpiton_riscv_defconfig

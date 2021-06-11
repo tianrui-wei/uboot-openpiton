@@ -8,8 +8,8 @@
  *   Tianrui Wei <tianrui-wei@outlook.com>
  */
 
-#ifndef __OPENPITON_RISCV_CONFIG_H
-#define __OPENPITON_RISCV_CONFIG_H
+#ifndef __OPENPITON_RISCV64_CONFIG_H
+#define __OPENPITON_RISCV64_CONFIG_H
 
 #include <linux/sizes.h>
 #ifdef CONFIG_SPL
