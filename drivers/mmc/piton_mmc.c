@@ -12,23 +12,23 @@
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <common.h>
+#include <div64.h>
 #include <dm.h>
 #include <errno.h>
 #include <linux/bitops.h>
-#include <linux/types.h>
 #include <linux/delay.h>
 #include <linux/err.h>
+#include <linux/types.h>
 #include <log.h>
-#include <div64.h>
 #include <mmc.h>
-#define CONFIG_MMC_TRACE
+
 struct piton_mmc_plat {
 	struct mmc_config cfg;
 	struct mmc mmc;
 };
 
 struct piton_mmc_priv {
-	u64 piton_mmc_base_addr; /* peripheral id */
+	void __iomem *piton_mmc_base_addr; /* peripheral id */
 };
 
 /*
@@ -37,35 +37,33 @@ struct piton_mmc_priv {
  * also, initialize the block size at init
  */
 static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
-							  struct mmc_data *data)
+															struct mmc_data *data)
 {
 	/* check first if this is a pure command */
 	if (!data)
 		return 0;
 
-
 	struct piton_mmc_priv *priv = dev_get_priv(dev);
-    unsigned int *buff;
-    u64 byte_cnt, start_block, start_addr;
-	
-    buff = (unsigned int *)data->dest;
-    byte_cnt = data->blocks * data->blocksize;
+	u32 *buff, *start_addr;
+	size_t byte_cnt, start_block;
+
+	buff = (u32 *)data->dest;
 	start_block = cmd->cmdarg;
-    start_addr = priv->piton_mmc_base_addr + (start_block);
+	start_addr = priv->piton_mmc_base_addr + start_block;
 
 	/* if there is a read */
 	if (data->flags & MMC_DATA_READ) {
-		for (u64 i = 0; i < byte_cnt; i += 4) {
-			*(buff) = readl((void *)(start_addr + i));
-			buff++;
+		for (byte_cnt = data->blocks * data->blocksize; byte_cnt;
+				 byte_cnt -= sizeof(u32)) {
+			*buff++ = readl(start_addr++);
 		}
 	} else {
 		/* else there is a write
 		 * we don't handle write, so error right away
 		 */
-		return -ENODEV;
+		return -ENOSYS;
 	}
-    
+
 	return 0;
 }
 
@@ -78,7 +76,7 @@ static int piton_mmc_ofdata_to_platdata(struct udevice *dev)
 	/* fill in device description */
 	struct blk_desc *bdesc;
 
-	priv->piton_mmc_base_addr = dev_read_addr(dev);
+	priv->piton_mmc_base_addr = (void *)dev_read_addr(dev);
 	cfg = &plat->cfg;
 	cfg->name = "PITON MMC";
 	cfg->host_caps = MMC_MODE_8BIT;
@@ -157,8 +155,8 @@ static int piton_mmc_bind(struct udevice *dev)
 }
 
 static const struct udevice_id piton_mmc_ids[] = {
-		{.compatible = "openpiton,piton-mmc"},
-		{ /* sentinel */ }
+	{.compatible = "openpiton,piton-mmc"},
+	{/* sentinel */}
 };
 
 U_BOOT_DRIVER(piton_mmc_drv) = {
