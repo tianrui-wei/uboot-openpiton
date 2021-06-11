@@ -34,9 +34,9 @@ config BOARD_SPECIFIC_OPTIONS # dummy
 	imply SPL_CPU_SUPPORT
 	imply SPL_OPENSBI
 	imply SPL_LOAD_FIT
-    imply SPL_SMP
-    imply SPL_MMC
+	imply SPL_SMP
+	imply SPL_MMC
 	imply SMP
-    imply SPL_RISCV_MMODE
+	imply SPL_RISCV_MMODE
 
 endif
