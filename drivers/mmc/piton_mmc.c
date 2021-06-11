@@ -21,7 +21,7 @@
 #include <log.h>
 #include <div64.h>
 #include <mmc.h>
-
+#define CONFIG_MMC_TRACE
 struct piton_mmc_plat {
 	struct mmc_config cfg;
 	struct mmc mmc;
@@ -65,7 +65,7 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 		 */
 		return -ENODEV;
 	}
-
+    
 	return 0;
 }
 
@@ -138,7 +138,6 @@ static int piton_mmc_probe(struct udevice *dev)
 	upriv->mmc->has_init = 1;
 	upriv->mmc->capacity = 0x2000000000ULL;
 	upriv->mmc->read_bl_len = MMC_MAX_BLOCK_LEN;
-
 	return 0;
 }
 
