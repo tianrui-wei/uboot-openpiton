@@ -73,7 +73,7 @@
 		};
 	};
 
-    memory@80000000 {
+	memory@80000000 {
 		u-boot,dm-spl;
 		device_type = "memory";
 		reg = < 0x00000000 0x80000000 0x00000000 0x40000000 >;
@@ -84,7 +84,6 @@
 		#size-cells = <1>;
 		compatible = "openpiton,chipset", "simple-bus";
 		ranges;
-
 
 		uart0: uart@fff0c2c000 {
 			compatible = "ns16550", "openpiton,ns16550";

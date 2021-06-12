@@ -14,7 +14,7 @@
 #include <dm.h>
 #include <spl.h>
 
-#if (IS_ENABLED(CONFIG_SPL))
+#ifdef CONFIG_SPL
 void board_boot_order(u32 *spl_boot_list)
 {
 	u8 i;
