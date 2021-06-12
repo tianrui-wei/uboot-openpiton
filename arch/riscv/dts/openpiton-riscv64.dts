@@ -72,7 +72,7 @@
 			clock-frequency = <66667000>;
 		};
 	};
-	
+
     memory@80000000 {
 		u-boot,dm-spl;
 		device_type = "memory";
@@ -152,4 +152,3 @@
 		};
 	};
 };
-

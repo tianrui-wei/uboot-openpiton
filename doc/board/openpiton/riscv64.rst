@@ -103,7 +103,7 @@ Sample Dual-core Debian boot log from OpenPiton
 	Firmware Base             : 0x80000000
 	Firmware Size             : 104 KB
 	Runtime SBI Version       : 0.2
-	
+
 	Domain0 Name              : root
 	Domain0 Boot HART         : 0
 	Domain0 HARTs             : 0*,1*,2*
@@ -113,7 +113,7 @@ Sample Dual-core Debian boot log from OpenPiton
 	Domain0 Next Arg1         : 0x0000000082200000
 	Domain0 Next Mode         : S-mode
 	Domain0 SysReset          : yes
-	
+
 	Boot HART ID              : 0
 	Boot HART Domain          : root
 	Boot HART ISA             : rv64imafdcsu
@@ -128,20 +128,20 @@ Sample Dual-core Debian boot log from OpenPiton
 
 
 	U-Boot 2021.01+ (Jun 12 2021 - 10:31:34 +0800)
-	
+
 	DRAM:  1 GiB
 	MMC:   sdhci@f000000000: 0 (eMMC)
 	In:    uart@fff0c2c000
 	Out:   uart@fff0c2c000
 	Err:   uart@fff0c2c000
-	Hit any key to stop autoboot:  0 
+	Hit any key to stop autoboot:  0
 	6492992 bytes read in 5310 ms (1.2 MiB/s)
 	## Flattened Device Tree blob at 86000000
 	Booting using the fdt blob at 0x86000000
 	Loading Device Tree to 00000000bfffa000, end 00000000bffff007 ... OK
-	
+
 	Starting kernel ...
-	
+
 	[    0.000000] OF: fdt: Ignoring memory range 0x80000000 - 0x80200000
 	[    0.000000] Linux version 5.6.0-rc4-gb9d34f7e294d-dirty
 	[    0.000000] earlycon: sbi0 at I/O port 0x0 (options '')
@@ -167,7 +167,7 @@ Sample Dual-core Debian boot log from OpenPiton
 	[    0.000000] elf_hwcap is 0x112d
 	[    0.000000] percpu: Embedded 16 pages/cpu s25368 r8192 d31976 u65536
 	[    0.000000] pcpu-alloc: s25368 r8192 d31976 u65536 alloc=16*4096
-	[    0.000000] pcpu-alloc: [0] 0 
+	[    0.000000] pcpu-alloc: [0] 0
 	[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 257544
 	[    0.000000] Kernel command line: earlycon=sbi root=/dev/piton_sd1
 	[    0.000000] Dentry cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
@@ -237,8 +237,8 @@ Sample Dual-core Debian boot log from OpenPiton
 	[    3.905595] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
 	[    3.954332] fff0c2c000.uart: ttyS0 at MMIO 0xfff0c2c000 (irq = 1, base_baud = 4166687) is a 16550
 	[    4.254794] loop: module loaded
-	[    4.258269] piton_sd:v1.0 Apr 26, 2019 
-	[    4.258269] 
+	[    4.258269] piton_sd:v1.0 Apr 26, 2019
+	[    4.258269]
 	[    4.265170] gpt partition table header:
 	[    4.265283] signature: 5452415020494645
 	[    4.269258] revision: 10000
@@ -272,9 +272,9 @@ Sample Dual-core Debian boot log from OpenPiton
 	[   18.154373] systemd[1]: System time before build time, advancing clock.
 	[   18.565415] systemd[1]: systemd 238 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIB)
 	[   18.596359] systemd[1]: Detected architecture riscv64.
-	
+
 	Welcome to Debian GNU/Linux buster/sid!
-	
+
 	[   18.797150] systemd[1]: Set hostname to <openpiton>.
 	[   31.609244] random: systemd: uninitialized urandom read (16 bytes read)
 	[   31.630366] systemd[1]: Listening on /dev/initctl Compatibility Named Pipe.
@@ -370,7 +370,7 @@ Sample Dual-core Debian boot log from OpenPiton
 	[  OK  ] Reached target Login Prompts.
 	[  OK  ] Reached target Multi-User System.
 	[  OK  ] Reached target Graphical Interface.
-	
+
 	Debian GNU/Linux buster/sid openpiton hvc0
-	
-	openpiton login: 
+
+	openpiton login:

@@ -35,7 +35,6 @@
 #define CONFIG_SPL_GD_ADDR 0x85000000
 #endif
 
-
 /* -------------------------------------------------
  * Environment
  */
