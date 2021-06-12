@@ -43,15 +43,18 @@
  * Board boot configuration
  */
 
-#define CONFIG_EXTRA_ENV_SETTINGS "\0"
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"fdt_addr_r=0x86000000\0" \
+	"kernel_addr_r=0x80200000\0" \
+	"image=boot/Image\0" \
+	"mmcdev=0\0" \
+	"mmcpart=1\0"
 
 #define CONFIG_USE_BOOTCOMMAND
 #define CONFIG_BOOTCOMMAND \
 	"fdt addr ${fdtcontroladdr}; " \
-	"fdt move ${fdtcontroladdr} 0x86000000; " \
-	"ext4load mmc 0:1 0x80200000 boot/Image; " \
-	"booti 0x80200000 - 0x86000000; "
-
-#define CONFIG_TIMESTAMP	/* Print image info with timestamp */
+	"fdt move ${fdtcontroladdr} ${fdt_addr_r}; " \
+	"load mmc ${mmcdev}:${mmcpart} ${kernel_addr_r} ${image}; " \
+	"booti ${kernel_addr_r} - ${fdt_addr_r}; "
 
 #endif/* __CONFIG_H */
