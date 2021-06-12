@@ -58,9 +58,6 @@ static int piton_mmc_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 			*buff++ = readl(start_addr++);
 		}
 	} else {
-		/* else there is a write
-		 * we don't handle write, so error right away
-		 */
 		return -ENOSYS;
 	}
 
