@@ -27,14 +27,6 @@ void board_boot_order(u32 *spl_boot_list)
 }
 #endif
 
-#ifdef CONFIG_SPL_LOAD_FIT
-int board_fit_config_name_match(const char *name)
-{
-	/* boot using first FIT config */
-	return 0;
-}
-#endif
-
 int board_init(void)
 {
 		return 0;
